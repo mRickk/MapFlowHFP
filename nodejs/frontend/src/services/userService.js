@@ -34,7 +34,7 @@ export function selectMap(mapId) {
     }
 }
 
-export function addMap(mapName, startDate, leaveDate) {
+export function addMap(name, starting_date, leaving_date, image_url = null) {
     const user = getUser();
     if (!user) return;
 
@@ -44,9 +44,10 @@ export function addMap(mapName, startDate, leaveDate) {
 
     const newMap = {
         id: newId,
-        name: mapName,
-        starting_date: startDate,
-        leaving_date: leaveDate,
+        name: name,
+        image_url: image_url || "https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=300&q=80",
+        starting_date: starting_date,
+        leaving_date: leaving_date,
         selected: false,
         saved_poi: []
     };
@@ -76,19 +77,22 @@ export function deleteMap(mapId) {
     saveUser(user);
 }
 
-export function addPoiToMap(mapId, poiId, datetime) {
+export function addPoiToMap(mapId, id, datetime = null, color = null, layer = null, must_have = false) {
     const user = getUser();
     if (!user) return;
 
     const map = user.maps.find(m => m.id === mapId);
 
     if (map) {
-        const exists = map.saved_poi.some(p => p.id === poiId);
+        const exists = map.saved_poi.some(p => p.id === id);
 
         if (!exists) {
             map.saved_poi.push({
-                id: poiId,
-                datetime: datetime
+                id: id,
+                datetime: datetime,
+                color: color || "gray",
+                layer: layer || "",
+                must_have: must_have
             });
             saveUser(user);
         }
