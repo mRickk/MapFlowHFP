@@ -15,7 +15,7 @@ function saveUser(user) {
 
 export function getMap(mapId) {
     const user = getUser();
-    return user?.maps.find(map => map.selected) || null;
+    return user?.maps.find(map => map.id === mapId) || null;
 }
 
 export function selectMap(mapId) {
@@ -30,7 +30,7 @@ export function selectMap(mapId) {
         });
         saveUser(user);
     } else {
-        console.error(`Errore: La mappa con ID ${mapId} non esiste.`);
+        console.error(`Error: Unabled to select map with ID ${mapId} because it doesn't exists`);
     }
 }
 
@@ -63,7 +63,7 @@ export function deleteMap(mapId) {
 
     const mapIndex = user.maps.findIndex(map => map.id === mapId);
     if (mapIndex === -1) {
-        console.error(`Errore: Impossibile eliminare la mappa con ID ${mapId} poichè non esiste.`);
+        console.error(`Error: Unabled to delete map with ID ${mapId} because it doesn't exists.`);
         return;
     }
     const wasSelected = user.maps[mapIndex].selected;
@@ -91,8 +91,6 @@ export function addPoiToMap(mapId, poiId, datetime) {
                 datetime: datetime
             });
             saveUser(user);
-        } else {
-            console.warn(`Il POI con ID ${poiId} è già presente nella mappa.`);
         }
     }
 }

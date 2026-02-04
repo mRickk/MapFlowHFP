@@ -11,13 +11,7 @@ export function getPOIs() {
 
 export function getPOI(POIId) {
     const pois = getPOIs() || [];
-
-    const poiIndex = pois.findIndex(poi => poi.id === POIId);
-    if (poiIndex === -1) {
-        console.error(`Errore: Impossibile ottenere il POI con ID ${mapId} poichè non esiste.`);
-        return;
-    }
-    return pois[poiIndex];
+    return pois.find(poi => poi.id === POIId) || null;
 }
 
 export function createPOI(name, address, category) {
@@ -48,6 +42,4 @@ export function deletePoi(poiId) {
         setItem(StorageKeys.POI, updatedPois);
         return;
     }
-
-    console.warn(`POI con ID ${poiId} non trovato.`);
 }
