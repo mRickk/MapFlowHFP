@@ -61,6 +61,13 @@
           "color": "purple",
           "layer": "Eventi",
           "must_have": true
+        },
+        {
+          "id": 7,
+          "datetime": "2024-05-15T16:00:00",
+          "color": "blue",
+          "layer": "Shopping",
+          "must_have": true
         }
       ]
     }
