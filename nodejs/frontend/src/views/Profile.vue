@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { getUser } from '../services/userService';
-import { getPOI, getPOIs } from '../services/poiService';
+import { getPOI } from '../services/poiService';
 
 import BadgeCard from '@/components/BadgeCard.vue';
 import country_10 from '@/assets/images/country_10.jpeg';
