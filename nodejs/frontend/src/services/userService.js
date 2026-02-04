@@ -77,6 +77,30 @@ export function deleteMap(mapId) {
     saveUser(user);
 }
 
+export function updateMap(mapId, name, starting_date, leaving_date, image_url = null) {
+    const user = getUser();
+    if (!user) return;
+    const updatedData = {
+        name: name,
+        starting_date: starting_date,
+        leaving_date: leaving_date,
+        image_url: image_url
+    };
+    const mapIndex = user.maps.findIndex(m => m.id === mapId);
+
+    if (mapIndex === -1) {
+        console.error(`Error: Map with ID ${mapId} not found.`);
+        return;
+    }
+    user.maps[mapIndex] = { 
+        ...user.maps[mapIndex], 
+        ...updatedData,
+        id: mapId
+    };
+    
+    saveUser(user);
+}
+
 export function addPoiToMap(mapId, id, datetime = null, color = null, layer = null, must_have = false) {
     const user = getUser();
     if (!user) return;
