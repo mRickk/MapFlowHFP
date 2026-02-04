@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import { initializeStorageIfNecessary } from '@/util/localStoreManager.js';
+import { initializeUserStorage } from '@/services/userService.js';
+import { initializePoiStorage } from '@/services/poiService.js';
 
 import Home from '@/views/Home.vue';
 
@@ -19,7 +20,8 @@ const router = createRouter({
 });
 
 router.beforeEach( async(to, from, next) => {
-    initializeStorageIfNecessary();
+    initializeUserStorage();
+    initializePoiStorage();
     next();
 });
 
