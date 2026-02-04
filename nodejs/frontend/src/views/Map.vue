@@ -2,5 +2,5 @@
 </script>
 
 <template>
- Home
+ Map
 </template>
