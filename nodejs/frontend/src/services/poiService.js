@@ -14,7 +14,7 @@ export function getPOI(POIId) {
     return pois.find(poi => poi.id === POIId) || null;
 }
 
-export function createPOI(name, address, category) {
+export function createPOI(name, address, city, country, category = null) {
     const pois = getPOIs() || [];
 
     const newId = pois.length > 0
@@ -25,6 +25,8 @@ export function createPOI(name, address, category) {
         id: newId,
         name: name || "New POI " + newId,
         address: address || "",
+        city: city,
+        country: country,
         category: category || "Generic",
     };
 
