@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import MapCard from '@/components/MapCard.vue';
+import { computed, onMounted, onUnmounted, watch, ref, reactive } from 'vue';
 import SearchBar from '@/components/SearchBar.vue';
-
-import { computed, onMounted, ref, reactive } from 'vue';
 import { getUser, addMap, deleteMap, updateMap } from '@/services/userService.js'
 
 interface MapData {
@@ -103,6 +102,19 @@ const handleSave = () => {
 
   closeModal();
 };
+
+//Avoid background scroll when modal is open
+watch(isModalOpen, (isOpen) => {
+  if (isOpen) {
+    document.body.style.overflow = 'hidden';
+  } else {
+    document.body.style.overflow = '';
+  }
+});
+
+onUnmounted(() => {
+  document.body.style.overflow = '';
+});
 </script>
 
 <template>

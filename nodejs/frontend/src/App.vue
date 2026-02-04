@@ -11,7 +11,7 @@ const route = useRoute();
 
     <NavBar />
 
-    <main class="grow bg-white pb-24">
+    <main class="grow bg-lighter/95 pb-24">
       <router-view />
     </main>
 
