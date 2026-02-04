@@ -11,13 +11,13 @@ import museum_100 from '@/assets/images/museum_100.jpeg';
 import parks_100 from '@/assets/images/parks_100.jpeg';
 
 const badges = ref([]);
-
+const user = ref(null);
 onMounted(() => {
-  const user = getUser();
-  const country_number = [...new Set(user.maps.flatMap(m => m.saved_poi).map(poi => getPOI(poi.id)).map(poi => poi.country.toLowerCase()))].length;
-  const museum_number = user.maps.flatMap(m => m.saved_poi).map(poi => getPOI(poi.id)).filter(poi => poi.category.toLowerCase() === 'museum').length;
-  const parks_number = user.maps.flatMap(m => m.saved_poi).map(poi => getPOI(poi.id)).filter(poi => poi.category.toLowerCase() === 'park').length;
-  const map_number = user.maps.length;
+  user.value = getUser();
+  const country_number = [...new Set(user.value.maps.flatMap(m => m.saved_poi).map(poi => getPOI(poi.id)).map(poi => poi.country.toLowerCase()))].length;
+  const museum_number = user.value.maps.flatMap(m => m.saved_poi).map(poi => getPOI(poi.id)).filter(poi => poi.category.toLowerCase() === 'museum').length;
+  const parks_number = user.value.maps.flatMap(m => m.saved_poi).map(poi => getPOI(poi.id)).filter(poi => poi.category.toLowerCase() === 'park').length;
+  const map_number = user.value.maps.length;
 
   badges.value = [
     { image: country_10, val: country_number, total: 10 },
@@ -34,7 +34,7 @@ onMounted(() => {
 
     <header class="sticky top-0 z-10 bg-lighter/95 backdrop-blur-sm p-8 border-b border-gray/10">
       <h1 class="text-dark text-2xl font-bold mb-2">My Profile</h1>
-      <p class="text-gray text-sm">See personal badges.</p>
+      <p v-if="user" class="text-gray text-sm">{{user.first_name}} {{user.last_name}}</p>
     </header>
 
     <section class="p-6 md:p-8">
