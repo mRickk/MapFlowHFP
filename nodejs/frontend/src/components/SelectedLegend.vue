@@ -201,6 +201,7 @@ const savePoi = (newData) => {
       poiDetails.value[poi.id].name = newData.name;
       poi.color = newData.color;
       poi.icon = newData.icon;
+      poi.must_have = newData.mustHave;
       
       updatePoiInMap(props.mapId, poi); 
     }
@@ -352,6 +353,7 @@ const movePoi = (poiId, toLayer) => {
         :name="editingPoiData?.details?.name"
         :color="editingPoiData?.color"
         :icon="editingPoiData?.icon"
+        :mustHave="editingPoiData?.must_have"
         @save="savePoi"
         @close="showPoiEdit = false"
       />
@@ -483,7 +485,7 @@ const movePoi = (poiId, toLayer) => {
                     :class="getIconClass(poi.icon || poi.details.category)" 
                     :style="{ color: getColorValue(poi.color) }"
                   ></i>
-                  <span class="text-gray-800 font-medium text-sm">{{ poi.details.name || `POI ${poi.id}` }}</span>
+                  <span class="text-gray-800 font-medium text-sm" :class="poi.must_have ? 'underline' : ''">{{ poi.details.name || `POI ${poi.id}` }}</span>
                 </div>
                 
                 <div 
@@ -554,7 +556,7 @@ const movePoi = (poiId, toLayer) => {
                   ></i>
                   
                   <div class="flex flex-col overflow-hidden">
-                    <span class="text-gray-800 font-medium text-sm truncate">{{ poi.details.name || `POI ${poi.id}` }}</span>
+                    <span class="text-gray-800 font-medium text-sm truncate" :class="poi.must_have ? 'underline' : ''">{{ poi.details.name || `POI ${poi.id}` }}</span>
                   </div>
                 </div>
 

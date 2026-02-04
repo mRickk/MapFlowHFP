@@ -12,6 +12,16 @@
         />
       </div>
 
+      <div class="flex items-center gap-2">
+        <input 
+          type="checkbox" 
+          id="mustHaveCheckbox" 
+          v-model="internalMustHave"
+          class="w-4 h-4 text-dark bg-gray-100 border-gray-300 rounded focus:ring-dark focus:ring-2"
+        >
+        <label for="mustHaveCheckbox" class="text-sm font-medium text-gray-900 select-none cursor-pointer">Must Have</label>
+      </div>
+
       <ColorPicker 
         v-model="internalColor" 
         label="Marker Color"
@@ -46,13 +56,15 @@ export default {
     name: String,
     color: String,
     icon: String,
+    mustHave: Boolean
   },
   emits: ['close', 'save'],
   data() {
     return {
       internalName: this.name || '',
       internalColor: this.color || '',
-      internalIcon: this.icon || ''
+      internalIcon: this.icon || '',
+      internalMustHave: this.mustHave || false
     };
   },
   methods: {
@@ -60,7 +72,8 @@ export default {
       this.$emit('save', {
         name: this.internalName,
         color: this.internalColor,
-        icon: this.internalIcon
+        icon: this.internalIcon,
+        mustHave: this.internalMustHave
       });
       this.$emit('close');
     }
