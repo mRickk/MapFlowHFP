@@ -71,7 +71,7 @@ const onDelete = () => {
 <template>
   <article
       @click="handleMapSelection"
-      class="group relative w-[357px] h-[140px] rounded-[15px] bg-white border border-lesslight font-mono p-3 flex flex-col justify-between overflow-hidden shadow-sm 
+      class="group relative w-[357px] h-[145px] rounded-[15px] bg-white border border-lesslight font-mono p-3 flex flex-col justify-between overflow-hidden shadow-sm 
              hover:shadow-xl hover:-translate-y-1 hover:border-bright/30 transition-all duration-300 ease-out cursor-pointer"
   >
     <div class="flex justify-between items-start w-full mb-1 relative"> <h3 class="text-dark font-bold text-sm truncate pr-2 group-hover:text-bright transition-colors">
@@ -80,7 +80,7 @@ const onDelete = () => {
       
       <button 
         @click.stop="toggleMenu" 
-        class="text-gray hover:text-dark transition-colors relative z-20 p-1 rounded-full hover:bg-lighter"
+        class="text-gray hover:text-dark transition-colors relative z-5 p-1 rounded-full hover:bg-lighter"
       >
         <i class="bi bi-three-dots-vertical"></i>
       </button>
@@ -88,7 +88,7 @@ const onDelete = () => {
       <div 
         v-if="isMenuOpen" 
         @click.stop
-        class="absolute top-6 right-0 bg-white border border-lesslight shadow-lg rounded-md z-30 w-32 flex flex-col py-1 animate-fade-in-down"
+        class="absolute top-6 right-0 bg-white border border-lesslight shadow-lg rounded-md z-20 w-32 flex flex-col py-1 animate-fade-in-down"
       >
         <button 
           @click="onEdit" 

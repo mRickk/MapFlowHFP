@@ -6,7 +6,7 @@
     "city": "New York",
     "country": "USA",
     "val": 4.7,
-    "category": "Museum"
+    "category": "museum"
   },
   {
     "id": 2,
@@ -15,7 +15,7 @@
     "city": "New York",
     "country": "USA",
     "val": 4.8,
-    "category": "Museum"
+    "category": "museum"
   },
   {
     "id": 3,
@@ -24,7 +24,7 @@
     "city": "New York",
     "country": "USA",
     "val": 4.8,
-    "category": "Park"
+    "category": "park"
   },
   {
     "id": 4,
@@ -33,7 +33,7 @@
     "city": "New York",
     "country": "USA",
     "val": 4.5,
-    "category": "Food"
+    "category": "food"
   },
   {
     "id": 5,
@@ -42,7 +42,7 @@
     "city": "Roma",
     "country": "Italy",
     "val": 4.7,
-    "category": "Square"
+    "category": "square"
   },
   {
     "id": 6,
@@ -51,7 +51,7 @@
     "city": "Firenze",
     "country": "Italy",
     "val": 4.6,
-    "category": "Food"
+    "category": "food"
   },
   {
     "id": 7,
@@ -60,7 +60,7 @@
     "city": "New York",
     "country": "USA",
     "val": 4.8,
-    "category": "Park"
+    "category": "park"
   },
   {
     "id": 8,
@@ -69,7 +69,7 @@
     "city": "Firenze",
     "country": "Italy",
     "val": 4.7,
-    "category": "Landmark"
+    "category": "landmark"
   },
   {
     "id": 9,
@@ -78,7 +78,7 @@
     "city": "New York",
     "country": "USA",
     "val": 4.6,
-    "category": "Food"
+    "category": "food"
   },
   {
     "id": 10,
@@ -87,6 +87,6 @@
     "city": "Firenze",
     "country": "Italy",
     "val": 4.8,
-    "category": "Square"
+    "category": "square"
   }
 ]
