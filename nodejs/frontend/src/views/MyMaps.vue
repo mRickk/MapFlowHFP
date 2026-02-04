@@ -52,7 +52,7 @@ const handleEditMap = (id: number) => {
 };
 
 const handleDeleteMap = (id: number) => {
-  if(confirm("Sei sicuro di voler eliminare questa mappa?")) {
+  if(confirm("Are you sure you want to delete this map?")) {
     deleteMap(id);
     maps.value = getUser().maps;
   }

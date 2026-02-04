@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'; // Aggiunto ref
+import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { selectMap } from '@/services/userService.js';
 
@@ -49,7 +49,7 @@ const handleMapSelection = () => {
     selectMap(props.id);
     router.push({ name: 'Map' });
   } catch (error) {
-    console.error("Errore durante la selezione della mappa:", error);
+    console.error("Error selecting map:", error);
   }
 };
 
