@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import MapCard from '@/components/MapCard.vue';
-import { onMounted, ref, reactive } from 'vue';
+import SearchBar from '@/components/SearchBar.vue';
+
+import { computed, onMounted, ref, reactive } from 'vue';
 import { getUser, addMap, deleteMap, updateMap } from '@/services/userService.js'
 
 interface MapData {
@@ -23,6 +25,15 @@ const newMap = reactive({
   image_url: '',
   starting_date: '',
   leaving_date: ''
+});
+
+const searchQuery = ref('');
+
+const filteredMaps = computed(() => {
+  if (!maps.value) return [];
+  return maps.value.filter(map => 
+    map.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+  );
 });
 
 onMounted(() => {
@@ -97,14 +108,18 @@ const handleSave = () => {
 <template>
   <main class="min-h-screen font-mono bg-lighter flex flex-col relative">
 
-    <header class="sticky top-0 z-10 bg-lighter/95 backdrop-blur-sm p-8 border-b border-gray/10">
+    <header class="sticky top-0 z-10 bg-lighter/95 backdrop-blur-sm px-8 pt-8 pb-3 border-b border-gray/10">
       <h1 class="text-dark text-2xl font-bold mb-2">My Maps</h1>
-      <p class="text-gray text-sm">Manage all your maps.</p>
+      <p class="text-gray text-sm mb-3">Manage all your maps.</p>
+
+      <SearchBar 
+          v-model="searchQuery"
+        />
     </header>
 
     <section class="p-8 pt-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 justify-items-center md:justify-items-start">
       <MapCard
-          v-for="map in maps"
+          v-for="map in filteredMaps"
           :key="map.id"
           :id="map.id"
           :name="map.name"
