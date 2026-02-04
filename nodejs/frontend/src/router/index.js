@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import { initializeStorageIfNecessary } from '@/util/localStoreManager.js';
 
 import Home from '@/views/Home.vue';
 
@@ -15,6 +16,11 @@ const routes = [
 const router = createRouter({
     history: createWebHistory(),
     routes
+});
+
+router.beforeEach( async(to, from, next) => {
+    initializeStorageIfNecessary();
+    next();
 });
 
 export default router;

@@ -1,0 +1,10 @@
+[
+  {
+    "id": "1", "name": "MoMa", "address": "Via Roma 1",
+    "val": 4.3
+  },
+  {
+    "id": "2", "name": "MET", "address": "Via Garibaldi 2",
+    "val": 3.6
+  }
+]
