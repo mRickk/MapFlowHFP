@@ -111,6 +111,22 @@ export function removePoiFromMap(mapId, poiId) {
     }
 }
 
+export function updatePoiInMap(mapId, updatedPoi) {
+    const user = getUser();
+    if (!user) return;
+
+    const map = user.maps.find(m => m.id === mapId);
+
+    if (map) {
+        const poiIndex = map.saved_poi.findIndex(p => p.id === updatedPoi.id);
+
+        if (poiIndex !== -1) {
+            map.saved_poi[poiIndex] = { ...map.saved_poi[poiIndex], ...updatedPoi };
+            saveUser(user);
+        }
+    }
+}
+
 export function isPoiSaved(mapId, poiId) {
     const user = getUser();
     if (!user) return false;
