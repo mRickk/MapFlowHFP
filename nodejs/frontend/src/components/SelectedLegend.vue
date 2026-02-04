@@ -1,9 +1,15 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import { formatTime } from '@/util/dateTime.js';
-import { updatePoiInMap } from '@/services/userService';
+import { formatTime, getCurrentLocalISO } from '@/util/dateTime.js';
+import { getIconClass, getColorValue } from '@/util/colorIcons';
+import { updatePoiInMap, removePoiFromMap } from '@/services/userService';
 import { getMap } from '@/services/userService';
 import { getPOI } from '@/services/poiService';
+
+import LayerEditModal from './LayerEditModal.vue';
+import POIEditModal from './POIEditModal.vue';
+import TimelineEditModal from './TimelineEditModal.vue';
+import ConfirmationModal from './ConfirmationModal.vue';
 
 const props = defineProps({
   mapId: {
@@ -20,6 +26,18 @@ const collapsedGroups = ref({});
 const layers = ref([]);
 const selectedPoiId = ref(null);
 const selectedLayerName = ref(null);
+
+const showLayerEdit = ref(false);
+const showPoiEdit = ref(false);
+const showTimelineEdit = ref(false);
+const showDeleteConfirm = ref(false);
+const showRemoveTimeConfirm = ref(false);
+
+const editingLayerData = ref({ originalName: '', name: '', color: '', icon: '' });
+const editingPoiData = ref(null);
+const deletingPoiData = ref(null);
+const removePoiTimeData = ref(null);
+
 const touchDragState = ref({
   active: false,
   poi: null,
@@ -94,13 +112,25 @@ const addLayer = () => {
 
 const groupedByDate = computed(() => {
   const groups = {};
-  const sorted = [...enrichedPois.value].sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
+  const noTimeKey = 'No time selected';
   
-  sorted.forEach(poi => {
+  const withTime = enrichedPois.value
+    .filter(p => p.datetime)
+    .sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
+    
+  const withoutTime = enrichedPois.value
+    .filter(p => !p.datetime);
+
+  withTime.forEach(poi => {
     const date = poi.datetime.split('T')[0];
     if (!groups[date]) groups[date] = [];
     groups[date].push(poi);
   });
+  
+  if (withoutTime.length > 0) {
+    groups[noTimeKey] = withoutTime;
+  }
+
   return groups;
 });
 
@@ -119,6 +149,115 @@ const selectPoi = (id) => {
 const selectLayer = (name) => {
   selectedLayerName.value = selectedLayerName.value === name ? null : name;
 };
+
+// --- Modal Handlers ---
+
+const openLayerEdit = (layerName) => {
+  const pois = groupedByLayer.value[layerName] || [];
+  const commonColor = pois.length > 0 ? pois[0].color : '';
+  const commonIcon = pois.length > 0 ? pois[0].icon : '';
+
+  editingLayerData.value = { 
+    originalName: layerName, 
+    name: layerName, 
+    color: commonColor, 
+    icon: commonIcon 
+  };
+  showLayerEdit.value = true;
+};
+
+const saveLayer = (newData) => {
+  if (!newData) return;
+
+  if (newData.name !== editingLayerData.value.originalName) {
+    const idx = layers.value.indexOf(editingLayerData.value.originalName);
+    if (idx !== -1) {
+      layers.value[idx] = newData.name;
+    }
+  }
+
+  mapData.value.saved_poi.forEach(poi => {
+    if (poi.layer === editingLayerData.value.originalName) {
+      poi.layer = newData.name;
+      if (newData.color) poi.color = newData.color;
+      if (newData.icon) poi.icon = newData.icon;
+      
+      updatePoiInMap(props.mapId, poi);
+    }
+  });
+
+  showLayerEdit.value = false;
+};
+
+const openPoiEdit = (poi) => {
+  editingPoiData.value = poi;
+  showPoiEdit.value = true;
+};
+
+const savePoi = (newData) => {
+  if (editingPoiData.value) {
+    const poi = mapData.value.saved_poi.find(p => p.id === editingPoiData.value.id);
+    if (poi) {
+      poiDetails.value[poi.id].name = newData.name;
+      poi.color = newData.color;
+      poi.icon = newData.icon;
+      
+      updatePoiInMap(props.mapId, poi); 
+    }
+  }
+};
+
+const openTimelineEdit = (poi) => {
+  editingPoiData.value = poi;
+  showTimelineEdit.value = true;
+};
+
+const saveTimeline = (newDateTime) => {
+  if (editingPoiData.value) {
+    const poi = mapData.value.saved_poi.find(p => p.id === editingPoiData.value.id);
+    if (poi) {
+      poi.datetime = newDateTime;
+      updatePoiInMap(props.mapId, poi);
+    }
+  }
+};
+
+const requestDeletePoi = (poi) => {
+  deletingPoiData.value = poi;
+  showDeleteConfirm.value = true;
+};
+
+const requestRemovePoiTime = (poi) => {
+  removePoiTimeData.value = poi;
+  showRemoveTimeConfirm.value = true;
+};
+
+
+const confirmDeletePoi = () => {
+  if (deletingPoiData.value) {
+    const idx = mapData.value.saved_poi.findIndex(p => p.id === deletingPoiData.value.id);
+    if (idx !== -1) {
+      mapData.value.saved_poi.splice(idx, 1);
+      removePoiFromMap(props.mapId, deletingPoiData.value.id);
+    }
+    showDeleteConfirm.value = false;
+    deletingPoiData.value = null;
+  }
+};
+
+const confirmRemovePoiTime = () => {
+  if (removePoiTimeData.value) {
+    const idx = mapData.value.saved_poi.findIndex(p => p.id === removePoiTimeData.value.id);
+    if (idx !== -1) {
+      mapData.value.saved_poi[idx].datetime = null;
+      updatePoiInMap(props.mapId, mapData.value.saved_poi[idx]);
+    }
+    showRemoveTimeConfirm.value = false;
+    removePoiTimeData.value = null;
+  }
+};
+
+// --- Drag & Drop ---
 
 const onDragStart = (event, poi, fromLayer) => {
   event.dataTransfer.dropEffect = 'move';
@@ -184,7 +323,6 @@ const onTouchEnd = (e) => {
   }
   touchDragState.value = { active: false, poi: null, fromLayer: null, x: 0, y: 0 };
 };
-          
 
 const movePoi = (poiId, toLayer) => {
   if (poiId && mapData.value) {
@@ -195,15 +333,56 @@ const movePoi = (poiId, toLayer) => {
     }
   }
 };
-
-const logAction = (action, poi) => {
-  console.log(`Action: ${action}`, poi);
-};
-
 </script>
 
 <template>
   <div>
+    <Teleport to="body">
+      <LayerEditModal 
+        v-if="showLayerEdit"
+        :name="editingLayerData.name"
+        :color="editingLayerData.color"
+        :icon="editingLayerData.icon"
+        @save="saveLayer"
+        @close="showLayerEdit = false"
+      />
+      
+      <POIEditModal
+        v-if="showPoiEdit"
+        :name="editingPoiData?.details?.name"
+        :color="editingPoiData?.color"
+        :icon="editingPoiData?.icon"
+        @save="savePoi"
+        @close="showPoiEdit = false"
+      />
+
+      <TimelineEditModal 
+        v-if="showTimelineEdit"
+        :name="editingPoiData?.details?.name"
+        :dateTime="editingPoiData?.datetime || getCurrentLocalISO()"
+        @save="saveTimeline"
+        @close="showTimelineEdit = false"
+      />
+
+      <ConfirmationModal
+        v-if="showDeleteConfirm"
+        title="Delete POI"
+        @confirm="confirmDeletePoi"
+        @cancel="showDeleteConfirm = false"
+      >
+        <p>Are you sure you want to remove <strong>{{ deletingPoiData?.details?.name }}</strong>?</p>
+      </ConfirmationModal>
+
+      <ConfirmationModal
+        v-if="showRemoveTimeConfirm"
+        title="Delete POI Time"
+        @confirm="confirmRemovePoiTime"
+        @cancel="showRemoveTimeConfirm = false"
+      >
+        <p>Remove time from <strong>{{ removePoiTimeData?.details?.name }}</strong>?</p>
+      </ConfirmationModal>
+    </Teleport>
+
     <button 
       class="fixed left-0 top-1/4 z-50 p-2 bg-white border border-gray rounded-r shadow-md hover:bg-light transition-colors"
       @click="toggleSidebar"
@@ -211,12 +390,6 @@ const logAction = (action, poi) => {
     >
       <i class="bi bi-list-ul text-xl"></i>
     </button>
-
-    <!-- <div 
-      v-if="isOpen"
-      class="fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300"
-      @click="isOpen = false"
-    ></div> -->
 
     <div 
       class="fixed top-0 left-0 h-full w-80 bg-light shadow-xl z-50 transition-transform duration-300 flex flex-col"
@@ -283,10 +456,10 @@ const logAction = (action, poi) => {
               >
               <h3 class="text-sm font-bold text-gray-700 uppercase tracking-wider">{{ layerName }}</h3>
               <button 
-                @click.stop="logAction('editLayer', layerName)" 
+                @click.stop="openLayerEdit(layerName)" 
                 class="ml-2 text-gray-400 hover:text-cyan active:text-cyan transition-opacity"
                 :class="{ 'opacity-100': selectedLayerName === layerName, 'opacity-0 group-hover:opacity-100': selectedLayerName !== layerName }"
-                title="Rename Layer"
+                title="Edit Layer"
               >
                 <i class="bi bi-pencil-fill"></i>
               </button>
@@ -306,8 +479,9 @@ const logAction = (action, poi) => {
               >
                 <div class="flex items-center gap-3 select-none">
                   <i 
-                    class="bi bi-geo-alt-fill text-lg" 
-                    :style="{ color: poi.color }"
+                    class="bi text-lg" 
+                    :class="getIconClass(poi.icon || poi.details.category)" 
+                    :style="{ color: getColorValue(poi.color) }"
                   ></i>
                   <span class="text-gray-800 font-medium text-sm">{{ poi.details.name || `POI ${poi.id}` }}</span>
                 </div>
@@ -316,10 +490,10 @@ const logAction = (action, poi) => {
                    class="flex gap-2 transition-opacity"
                    :class="{ 'opacity-100': selectedPoiId === poi.id, 'opacity-0 group-hover:opacity-100': selectedPoiId !== poi.id }"
                 >
-                  <button @click.stop="logAction('edit', poi)" class="text-gray hover:text-cyan active:text-cyan" title="Edit POI">
+                  <button @click.stop="openPoiEdit(poi)" class="text-gray hover:text-cyan active:text-cyan" title="Edit POI">
                     <i class="bi bi-pencil-fill"></i>
                   </button>
-                  <button @click="logAction('remove', poi)" class="text-gray hover:text-red active:text-red" title="Remove POI">
+                  <button @click.stop="requestDeletePoi(poi)" class="text-gray hover:text-red active:text-red" title="Remove POI">
                     <i class="bi bi-dash-circle-fill"></i>
                   </button>
                 </div>
@@ -360,13 +534,27 @@ const logAction = (action, poi) => {
                 :class="{ 'bg-white': selectedPoiId === poi.id, 'hover:bg-white': selectedPoiId !== poi.id }"
               >
                 <div class="flex items-center gap-3 w-full select-none">
-                  <span class="text-xs font-mono px-1 py-0.5 text-xl text-darker">
+                  <span 
+                    v-if="date !== 'No time selected'"
+                    class="text-xs font-mono px-1 py-0.5 text-xl text-darker"
+                  >
                     {{ formatTime(poi.datetime) }}
                   </span>
+                  <span 
+                    v-else
+                    class="text-xs font-mono px-1 py-0.5 text-xl text-darker opacity-30"
+                  >
+                   --:--
+                  </span>
+
+                  <i 
+                    class="bi text-lg" 
+                    :class="getIconClass(poi.icon || poi.details.category)" 
+                    :style="{ color: getColorValue(poi.color) }"
+                  ></i>
                   
                   <div class="flex flex-col overflow-hidden">
                     <span class="text-gray-800 font-medium text-sm truncate">{{ poi.details.name || `POI ${poi.id}` }}</span>
-                    <span class="text-xs text-gray-500 truncate" v-if="poi.details.category">{{ poi.details.category }}</span>
                   </div>
                 </div>
 
@@ -374,10 +562,15 @@ const logAction = (action, poi) => {
                   class="flex gap-2 shrink-0 ml-2 transition-opacity"
                   :class="{ 'opacity-100': selectedPoiId === poi.id, 'opacity-0 group-hover:opacity-100': selectedPoiId !== poi.id }"
                 >
-                   <button @click.stop="logAction('reschedule', poi)" class="text-gray hover:text-cyan" title="Reschedule">
+                   <button @click.stop="openTimelineEdit(poi)" class="text-gray hover:text-cyan" title="Reschedule">
                     <i class="bi bi-calendar-fill"></i>
                   </button>
-                  <button @click.stop="logAction('calendar-remove', poi)" class="text-gray hover:text-red" title="Remove from schedule">
+                  <button 
+                    v-if="date !== 'No time selected'"
+                    @click.stop="requestRemovePoiTime(poi)" 
+                    class="text-gray hover:text-red" 
+                    title="Remove from schedule"
+                  >
                     <i class="bi bi-calendar2-x"></i>
                   </button>
                 </div>
