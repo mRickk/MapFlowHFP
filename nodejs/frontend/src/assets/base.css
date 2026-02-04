@@ -6,23 +6,25 @@
   --dark: #66555F;
   --darker: #42363d;
   --lessdark: #A49193;
-  --bright: #f09574;
-  --brighter: #f37e53;
-  --lessbright: #EFA990;
-  --light: #FFE8D6;
+  --bright: #f7b097;
+  --brighter: #f8a181;
+  --lessbright: #ffcdba;
+  --light: #fff3e9;
   --lighter: #fff1e6;
-  --lesslight: #f7dac5;
+  --lesslight: #ffe8d8;
   --white: #fffaf6;
   --black: #1d1b1c;
-  --gray: #8f8f8f;
-  --darkgray: #555555;
-  --lightgray: #b1b1b1;
+  --gray: #a8a8a8;
+  --darkgray: #7c7c7c;
+  --darkergray: #555555;
+  --lightgray: #cecece;
+  --lightergray: #e2e2e2;
   
-  --red: #c01c1f;
-  --orange: #e99210;
-  --yellow: #dbc605;
-  --green: #257727;
-  --cyan: #96dbdd;
+  --red: #f36a73;
+  --orange: #f0a46f;
+  --yellow: #eee676;
+  --green: #64b350;
+  --cyan: #83a9eb;
 }
 
 @theme {
@@ -41,7 +43,9 @@
   --color-disabled: var(--disabled);
   --color-gray: var(--gray);
   --color-darkgray: var(--darkgray);
+  --color-darkergray: var(--darkergray);
   --color-lightgray: var(--lightgray);
+  --color-lightergray: var(--lightergray);
   --color-red: var(--red);
   --color-orange: var(--orange);
   --color-yellow: var(--yellow);
