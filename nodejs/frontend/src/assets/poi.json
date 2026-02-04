@@ -6,7 +6,9 @@
     "city": "New York",
     "country": "USA",
     "val": 4.7,
-    "category": "museum"
+    "category": "museum",
+    "lat": 40.761595199047335,
+    "lng": -73.97770648620123
   },
   {
     "id": 2,
@@ -15,7 +17,9 @@
     "city": "New York",
     "country": "USA",
     "val": 4.8,
-    "category": "museum"
+    "category": "museum",
+    "lat": 40.779509689068654,
+    "lng": -73.96315817226959
   },
   {
     "id": 3,
@@ -24,7 +28,9 @@
     "city": "New York",
     "country": "USA",
     "val": 4.8,
-    "category": "park"
+    "category": "park",
+    "lat": 40.782595700233124,
+    "lng": -73.96556753823079
   },
   {
     "id": 4,
@@ -33,25 +39,31 @@
     "city": "New York",
     "country": "USA",
     "val": 4.5,
-    "category": "food"
+    "category": "food",
+    "lat": 40.72231428318109,
+    "lng": -73.98741827412042
   },
   {
     "id": 5,
     "name": "Piazza Navona",
     "address": "Piazza Navona",
-    "city": "Roma",
+    "city": "Firenze",
     "country": "Italy",
     "val": 4.7,
-    "category": "square"
+    "category": "square",
+    "lat": 41.899187119127475,
+    "lng": 12.473070506442824
   },
   {
     "id": 6,
-    "name": "Trattoria Da Burde",
-    "address": "Via Pistoiese, 154",
+    "name": "All'Antico Vinaio",
+    "address": "Via dei Neri, 65r",
     "city": "Firenze",
     "country": "Italy",
     "val": 4.6,
-    "category": "food"
+    "category": "food",
+    "lat": 43.76858274726116,
+    "lng": 11.257473282238767
   },
   {
     "id": 7,
@@ -60,7 +72,9 @@
     "city": "New York",
     "country": "USA",
     "val": 4.8,
-    "category": "park"
+    "category": "park",
+    "lat": 40.748301842094385,
+    "lng": -74.00484280536665
   },
   {
     "id": 8,
@@ -69,16 +83,20 @@
     "city": "Firenze",
     "country": "Italy",
     "val": 4.7,
-    "category": "landmark"
+    "category": "landmark",
+    "lat": 43.76803336572917,
+    "lng": 11.25308983804203
   },
   {
     "id": 9,
     "name": "Joe's Pizza",
-    "address": "7 Carmine St",
+    "address": "150 E 14th St",
     "city": "New York",
     "country": "USA",
     "val": 4.6,
-    "category": "food"
+    "category": "food",
+    "lat": 40.733784108905816,
+    "lng": -73.98775935663701
   },
   {
     "id": 10,
@@ -87,6 +105,8 @@
     "city": "Firenze",
     "country": "Italy",
     "val": 4.8,
-    "category": "square"
+    "category": "square",
+    "lat": 43.773477206531766,
+    "lng": 11.256528639489828
   }
 ]
