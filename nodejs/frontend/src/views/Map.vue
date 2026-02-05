@@ -69,28 +69,42 @@ const renderMarkers = () => {
         marker.on('click', () => {
             selectedPoi.value = poi;
             showPoiDetails.value = true;
-            
-            insertCoords.value = { lat: poi.lat, lng: poi.lng };
-            insertPoiData.value = {
-                id: poi.id,
-                name: poi.name,
-                icon: poi.icon || 'pin',
-                color: poi.color || 'blue'
-            };
         });
         
         marker.addTo(markerLayerGroup);
     });
 };
 
+const handleAddFromInfo = () => {
+    if (!selectedPoi.value) return;
+
+    insertPoiData.value = {
+        id: selectedPoi.value.id,
+        name: selectedPoi.value.name,
+        icon: selectedPoi.value.icon || 'pin',
+        color: selectedPoi.value.color || 'blue'
+    };
+    
+    insertCoords.value = { lat: selectedPoi.value.lat, lng: selectedPoi.value.lng };
+
+    showPoiDetails.value = false;
+    showInsertModal.value = true;
+};
+
+const handleRemoveFromInfo = () => {
+    loadMapData();
+    renderMarkers();
+    legendKey.value++; 
+};
+
 const handleCreatePoi = (poiData) => {
     if (!insertCoords.value || !activeMap.value) return;
-
+    
     const payload = {
-        ...poiData,
-        lat: insertCoords.value.lat,
-        lng: insertCoords.value.lng
+        ...selectedPoi.value,
+        ...poiData
     };
+    delete payload.video_url;
 
     if (insertPoiData.value && insertPoiData.value.id) {
         payload.id = insertPoiData.value.id;
@@ -128,6 +142,7 @@ const closeInsertModal = () => {
     showInsertModal.value = false;
     insertCoords.value = null;
     tempMarkerLayer.clearLayers();
+    insertPoiData.value = { name: '', icon: 'pin', color: 'red' };
 };
 
 const handlePoiSelected = (poi) => {
@@ -200,6 +215,8 @@ onMounted(() => {
     <POIDetailsCard 
         :visible="showPoiDetails"
         :poi="selectedPoi"
+        :onAdd="handleAddFromInfo"
+        :onRemove="handleRemoveFromInfo"
         @close="showPoiDetails = false"
     />
 

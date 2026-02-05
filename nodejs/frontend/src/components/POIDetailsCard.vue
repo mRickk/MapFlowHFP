@@ -10,7 +10,10 @@ const props = defineProps({
   visible: {
     type: Boolean,
     default: false
-  }
+  },
+  
+  onAdd: { type: Function, default: () => {} },
+  onRemove: { type: Function, default: () => {} }
 });
 
 const emit = defineEmits(['close']);
@@ -82,7 +85,13 @@ const endDrag = () => {
         </div>
 
         <div class="flex-1 overflow-y-auto pb-6 space-y-6">
-            <PoiInfoComponent v-if="poi" :data="poi" :onClose="() => emit('close')" />
+            <PoiInfoComponent 
+                v-if="poi" 
+                :data="poi" 
+                :onAdd="onAdd"
+                :onRemove="onRemove"
+                :onClose="() => emit('close')" 
+            />
 
             <div v-if="poi && poi.images_url && poi.images_url.length > 0" class="flex flex-col gap-4 px-2">
                 <div 
