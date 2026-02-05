@@ -3,6 +3,12 @@ import { onMounted, ref } from 'vue';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
+import { getUser } from '@/services/userService';
+import SelectedLegend from '@/components/SelectedLegend.vue';
+import SearchBar from '@/components/SearchBar.vue';
+
+const searchQuery = ref('');
+
 // Icona personalizzata con immagine
 const redIcon = L.icon({
   iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
@@ -56,6 +62,13 @@ onMounted(() => {
 </script>
 
 <template>
+    <div class="absolute top-0 left-0 w-full z-10 p-8">
+        <SearchBar 
+            v-model="searchQuery"
+            class="" 
+        />
+    </div>
+    <SelectedLegend :mapId="getUser().maps.find(map => map.selected).id" class="z-10"/>
     <div id="map" class="absolute inset-0 z-0"></div>
 </template>
 

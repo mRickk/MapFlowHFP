@@ -20,7 +20,7 @@ const handleInput = (e: Event) => {
       :value="modelValue"
       @input="handleInput"
       type="text"
-      placeholder="Search your adventures..."
+      placeholder="Search..."
       class="w-full bg-white border border-lesslight rounded-lg pl-10 pr-4 py-2 text-dark font-mono text-sm focus:outline-none focus:border-bright focus:ring-1 focus:ring-bright transition-all placeholder:text-gray/50"
     />
   </div>
