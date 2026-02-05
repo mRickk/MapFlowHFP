@@ -119,23 +119,11 @@
     "category": "museum",
     "lat": 41.890235535985525,
     "lng": 12.492230143670573,
-    "video_url": "https://www.instagram.com/reels/DRXeuqwDOW0/"
+    "video_url": "https://www.instagram.com/p/DRXeuqwDOW0/"
 
   },
   {
     "id": 12,
-    "name": "Forno Ceralli",
-    "address": "Piazza Bambocci, 15",
-    "city": "Rome",
-    "country": "Italy",
-    "val": 4.3,
-    "category": "bakery",
-    "lat": 41.80969845340661,
-    "lng": 12.68084092622037,
-    "video_url": "https://www.instagram.com/reels/DM2hUbgIFWl/"
-  },
-  {
-    "id": 13,
     "name": "Fratelli TRECCA",
     "address": "Via dei Cerchi, 55",
     "city": "Rome",
@@ -144,10 +132,10 @@
     "category": "bakery",
     "lat": 41.88821276977888,
     "lng": 12.483612170458812,
-    "video_url": "https://www.instagram.com/reels/DI31Z8HMy6v/"
+    "video_url": "https://www.instagram.com/p/DI31Z8HMy6v/"
   },
   {
-    "id": 14,
+    "id": 13,
     "name": "Vico Pizza&Wine Roma",
     "address": "Piazza Rondanini, 47",
     "city": "Rome",
@@ -156,10 +144,10 @@
     "category": "restaurant",
     "lat": 41.89984789214533,
     "lng": 12.47599296441766,
-    "video_url": "https://www.instagram.com/reels/DJryidCI1tr/"
+    "video_url": "https://www.instagram.com/p/DJryidCI1tr/"
   },
   {
-    "id": 15,
+    "id": 14,
     "name": "Clorofilla Cucina & Distillati",
     "address": "Vicolo delle Grotte, 17",
     "city": "Rome",
@@ -168,10 +156,10 @@
     "category": "restaurant",
     "lat": 41.89463789411614,
     "lng": 12.472666908597398,
-    "video_url": "https://www.instagram.com/reels/DHDmI4sNTae/"
+    "video_url": "https://www.instagram.com/p/DHDmI4sNTae/"
   },
   {
-    "id": 16,
+    "id": 15,
     "name": "La Gattabuia",
     "address": "Via del Porto, 1",
     "city": "Rome",
@@ -180,6 +168,6 @@
     "category": "restaurant",
     "lat": 41.88652303474426,
     "lng": 12.477040935582055,
-    "video_url": "https://www.instagram.com/reels/DQ7IBRpDXdr/"
+    "video_url": "https://www.instagram.com/p/DQ7IBRpDXdr/"
   }
 ]
