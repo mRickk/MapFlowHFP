@@ -56,7 +56,7 @@ const selectPoi = (id) => {
   if (selectedPoiId.value === id) {
     isOpen.value = false;
     emit('center-poi', id);
-    selectedPoiId.value = null; // Optional: deselect after centering? Or keep selected? "selectedPoiId.value = null" might be better if the legend is closing.
+    selectedPoiId.value = null;
   } else {
     selectedPoiId.value = id;
     isOpen.value = true;
@@ -407,7 +407,7 @@ const movePoi = (poiId, toLayer) => {
         class="fixed z-[100] bg-white p-3 rounded shadow-xl opacity-90 pointer-events-none border border-blue-500 transform -translate-x-1/2 -translate-y-1/2 w-64 flex items-center gap-2"
         :style="{ left: touchDragState.x + 'px', top: touchDragState.y + 'px' }"
       >
-        <i class="bi bi-geo-alt-fill text-lg text-gray-500"></i>
+        <i class="bi text-lg text-gray-500" :class="getIconClass(touchDragState.poi?.icon)"></i>
         <span class="text-xs font-bold truncate">{{ touchDragState.poi?.name }}</span>
       </div>
 
@@ -464,7 +464,7 @@ const movePoi = (poiId, toLayer) => {
               <h3 class="text-sm font-bold text-gray-700 uppercase tracking-wider">{{ layerName }}</h3>
               <button 
                 @click.stop="openLayerEdit(layerName)" 
-                class="ml-2 text-gray-400 hover:text-cyan active:text-cyan transition-opacity"
+                class="ml-auto text-cyan text-xl transition-opacity"
                 :class="{ 'opacity-100': selectedLayerName === layerName, 'opacity-0 group-hover:opacity-100': selectedLayerName !== layerName }"
                 title="Edit Layer"
               >
@@ -484,23 +484,23 @@ const movePoi = (poiId, toLayer) => {
                 class="group rounded-xl ml-3 mb-1 p-1 flex items-center justify-between transition-colors cursor-move border border-transparent hover:border-lightergray"
                 :class="{ 'bg-white border-lightergray': selectedPoiId === poi.id, 'hover:bg-white': selectedPoiId !== poi.id }"
               >
-                <div class="flex items-center gap-3 select-none">
+                <div class="flex items-center gap-3 select-none flex-1 min-w-0">
                   <i 
-                    class="bi text-lg" 
+                    class="bi text-lg shrink-0" 
                     :class="getIconClass(poi.icon || poi.category.toLowerCase())" 
                     :style="{ color: getColorValue(poi.color) }"
                   ></i>
-                  <span class="text-gray-800 text-sm" :class="poi.must_have ? 'font-bold' : ''">{{ poi.name || `POI ${poi.id}` }}</span>
+                  <span class="text-gray-800 text-sm break-words" :class="poi.must_have ? 'font-bold' : ''">{{ poi.name || `POI ${poi.id}` }}</span>
                 </div>
                 
                 <div 
-                   class="flex gap-2 transition-opacity"
+                   class="flex gap-2 shrink-0 transition-opacity"
                    :class="{ 'opacity-100': selectedPoiId === poi.id, 'opacity-0 group-hover:opacity-100': selectedPoiId !== poi.id }"
                 >
-                  <button @click.stop="openPoiEdit(poi)" class="text-gray hover:text-cyan active:text-cyan" title="Edit POI">
+                  <button @click.stop="openPoiEdit(poi)" class="text-cyan text-xl" title="Edit POI">
                     <i class="bi bi-pencil-fill"></i>
                   </button>
-                  <button @click.stop="requestDeletePoi(poi)" class="text-gray hover:text-red active:text-red" title="Remove POI">
+                  <button @click.stop="requestDeletePoi(poi)" class="text-red text-xl" title="Remove POI">
                     <i class="bi bi-dash-circle-fill"></i>
                   </button>
                 </div>
@@ -540,7 +540,7 @@ const movePoi = (poiId, toLayer) => {
                 class="group rounded-xl ml-3 mb-1 p-1 flex items-center justify-between transition-colors border-l-4 border-gray-300"
                 :class="{ 'bg-white': selectedPoiId === poi.id, 'hover:bg-white': selectedPoiId !== poi.id }"
               >
-                <div class="flex items-center gap-3 w-full select-none">
+                <div class="flex items-center gap-3 flex-1 min-w-0 select-none">
                   <span 
                     v-if="date !== 'No time selected'"
                     class="text-xs font-mono px-1 py-0.5 text-xl text-darker"
@@ -555,13 +555,13 @@ const movePoi = (poiId, toLayer) => {
                   </span>
 
                   <i 
-                    class="bi text-lg" 
+                    class="bi text-lg shrink-0" 
                     :class="getIconClass(poi.icon || poi.category.toLowerCase())" 
                     :style="{ color: getColorValue(poi.color) }"
                   ></i>
                   
-                  <div class="flex flex-col overflow-hidden">
-                    <span class="text-gray-800 text-sm truncate" :class="poi.must_have ? 'font-bold' : ''">{{ poi.name || `POI ${poi.id}` }}</span>
+                  <div class="flex flex-col">
+                    <span class="text-gray-800 text-sm break-words" :class="poi.must_have ? 'font-bold' : ''">{{ poi.name || `POI ${poi.id}` }}</span>
                   </div>
                 </div>
 
@@ -569,16 +569,16 @@ const movePoi = (poiId, toLayer) => {
                   class="flex gap-2 shrink-0 ml-2 transition-opacity"
                   :class="{ 'opacity-100': selectedPoiId === poi.id, 'opacity-0 group-hover:opacity-100': selectedPoiId !== poi.id }"
                 >
-                   <button @click.stop="openTimelineEdit(poi)" class="text-gray hover:text-cyan" title="Reschedule">
+                   <button @click.stop="openTimelineEdit(poi)" class="text-cyan text-xl" title="Reschedule">
                     <i class="bi bi-calendar-fill"></i>
                   </button>
                   <button 
                     v-if="date !== 'No time selected'"
                     @click.stop="requestRemovePoiTime(poi)" 
-                    class="text-gray hover:text-red" 
+                    class="text-red" 
                     title="Remove from schedule"
                   >
-                    <i class="bi bi-calendar2-x"></i>
+                    <i class="bi bi-calendar2-x text-xl"></i>
                   </button>
                 </div>
 
