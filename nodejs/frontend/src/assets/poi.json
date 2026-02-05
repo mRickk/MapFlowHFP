@@ -260,5 +260,94 @@
     "images_url": [
       "https://images.unsplash.com/photo-1604741836988-152c0fe62e06?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     ]
+  },
+  {
+    "id": 16,
+    "name": "Villa Borghese",
+    "address": "Villa Borghese",
+    "city": "Rome",
+    "country": "Italy",
+    "val": 4.6,
+    "category": "Park",
+    "icon": "park",
+    "color": "green",
+    "lat": 41.91405381593465,
+    "lng": 12.48534961058219,
+    "images_url": [
+      "https://images.unsplash.com/photo-1718845643799-9a44658c7a90?q=80&w=627&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1695591627149-666feff28d59?q=80&w=1026&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1561362436-df7d30a3fe2a?q=80&w=765&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ]
+  },
+  {
+    "id": 17,
+    "name": "Piazza Navona",
+    "address": "Piazza Navona",
+    "city": "Rome",
+    "country": "Italy",
+    "val": 4.7,
+    "category": "Landmark",
+    "icon": "camera",
+    "color": "orange",
+    "lat": 41.89931499938318,
+    "lng": 12.473009824075056,
+    "images_url": [
+      "https://images.unsplash.com/photo-1662398885856-cf2ab6e981b2?q=80&w=1174&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1569437718668-8fa8cd755288?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1693824112057-4004bf54d328?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ]
+  },
+  {
+    "id": 18,
+    "name": "Piazza di Spagna",
+    "address": "Piazza di Spagna",
+    "city": "Rome",
+    "country": "Italy",
+    "val": 4.7,
+    "category": "Landmark",
+    "icon": "camera",
+    "color": "orange",
+    "lat": 41.9058734384458,
+    "lng": 12.48242355660823,
+    "images_url": [
+      "https://images.unsplash.com/photo-1636804907035-8ae6360f1d4f?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1693824113484-314403d64923?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ]
+  },
+  {
+    "id": 19,
+    "name": "Empire State Building",
+    "address": "20 W 34th St",
+    "city": "New York",
+    "country": "USA",
+    "val": 4.7,
+    "category": "Landmark",
+    "icon": "camera",
+    "color": "orange",
+    "lat": 40.74858670112698,
+    "lng": -73.98568587627966,
+    "images_url": [
+      "https://images.unsplash.com/photo-1428366890462-dd4baecf492b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://plus.unsplash.com/premium_photo-1694475315783-512c95173330?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1544608644-bd252c997991?q=80&w=685&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ]
+  },
+  {
+    "id": 20,
+    "name": "Flatiron Building",
+    "address": "175 5th Ave",
+    "city": "New York",
+    "country": "USA",
+    "val": 4.5,
+    "category": "Landmark",
+    "icon": "camera",
+    "color": "orange",
+    "lat": 40.741352738386134,
+    "lng": -73.98980654884133,
+    "images_url": [
+      "https://images.unsplash.com/photo-1553542792-9abd1f80a8c5?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1518036400767-73a02d2d2a73?q=80&w=1025&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1496780861691-26d8406e01c6?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ]
   }
 ]
