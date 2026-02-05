@@ -3,11 +3,12 @@ import SelectedLegend from '@/components/SelectedLegend.vue';
 import InsertPOIModal from '@/components/InsertPOIModal.vue';
 import POIDetailsCard from '@/components/POIDetailsCard.vue';
 import SearchBar from '@/components/SearchBar.vue';
+import ConfirmationModal from '@/components/ConfirmationModal.vue';
 import { temporaryMarkerIcon, htmlMarkerIcon } from '@/util/mapWaypoint';
 import { onMounted, ref, watch, computed } from 'vue';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { getUser, createPoiInMap } from '@/services/userService';
+import { getUser, createPoiInMap, removePoiFromMap } from '@/services/userService';
 import { getPOIs } from '@/services/poiService';
 
 let mapInstance = null;
@@ -18,6 +19,7 @@ const markerLayerGroup = L.layerGroup();
 const tempMarkerLayer = L.layerGroup();
 const showInsertModal = ref(false);
 const showPoiDetails = ref(false);
+const showConfirmRemove = ref(false);
 const selectedPoi = ref(null);
 const insertCoords = ref(null);
 const insertPoiData = ref({ name: '', icon: 'pin', color: 'red' });
@@ -30,6 +32,11 @@ const availableLayers = computed(() => {
         if (p.layer) layers.add(p.layer);
     });
     return Array.from(layers).sort();
+});
+
+const isPoiSaved = computed(() => {
+    if (!selectedPoi.value || !activeMap.value || !activeMap.value.saved_poi) return false;
+    return activeMap.value.saved_poi.some(p => p.id === selectedPoi.value.id);
 });
 
 const legendKey = ref(0);
@@ -75,7 +82,7 @@ const renderMarkers = () => {
     });
 };
 
-const handleAddFromInfo = () => {
+const handleAddFromInfo = (poi) => {
     if (!selectedPoi.value) return;
 
     insertPoiData.value = {
@@ -91,10 +98,23 @@ const handleAddFromInfo = () => {
     showInsertModal.value = true;
 };
 
-const handleRemoveFromInfo = () => {
+
+const handleRemoveFromInfo = (poi) => {
+    if (selectedPoi.value) {
+        showConfirmRemove.value = true;
+    }
+};
+
+const confirmRemovePoi = () => {
+    if (!selectedPoi.value || !activeMap.value) return;
+    
+    removePoiFromMap(activeMap.value.id, selectedPoi.value.id);
     loadMapData();
     renderMarkers();
     legendKey.value++; 
+    
+    showConfirmRemove.value = false;
+    showPoiDetails.value = false;
 };
 
 const handleCreatePoi = (poiData) => {
@@ -104,7 +124,6 @@ const handleCreatePoi = (poiData) => {
         ...selectedPoi.value,
         ...poiData
     };
-    delete payload.video_url;
 
     if (insertPoiData.value && insertPoiData.value.id) {
         payload.id = insertPoiData.value.id;
@@ -129,12 +148,6 @@ const handleCenterPoi = (poiId) => {
     if (poi && mapInstance) {
         mapInstance.setView([poi.lat, poi.lng], 18);
         selectedPoi.value = poi;
-        // The user didn't explicitly ask to show details here, but "map centers on the poi" usually implies showing it. 
-        // "if it's clicked again the legend closes itself and the map centers on the poi"
-        // It doesn't say "open details". But usually centering on a POI implies selecting it.
-        // I will NOT open details to be safe, just center. 
-        // Wait, if I set selectedPoi.value, the POIDetailsCard might show if showPoiDetails is true.
-        // showPoiDetails is separate.
     }
 };
 
@@ -215,11 +228,21 @@ onMounted(() => {
     <POIDetailsCard 
         :visible="showPoiDetails"
         :poi="selectedPoi"
-        :onAdd="handleAddFromInfo"
-        :onRemove="handleRemoveFromInfo"
+        :isSaved="isPoiSaved"
+        @add="handleAddFromInfo"
+        @remove="handleRemoveFromInfo"
         @close="showPoiDetails = false"
     />
 
+    <ConfirmationModal
+        v-if="showConfirmRemove"
+        title="Rimuovi Punto di Interesse"
+        @confirm="confirmRemovePoi"
+        @cancel="showConfirmRemove = false"
+    >
+        <p>Sei sicuro di voler rimuovere <strong>{{ selectedPoi?.name }}</strong> dalla mappa?</p>
+        <p class="text-sm text-gray-500 mt-2">Questa azione non può essere annullata.</p>
+    </ConfirmationModal>
     <InsertPOIModal
         v-if="showInsertModal"
         :layers="availableLayers"

@@ -6,7 +6,6 @@ export function initializeUserStorage() {
     usersObject.maps.forEach(map => {
         map.saved_poi?.forEach(poi => {
             const detail = poiObject.find(p => p.id === poi.id);
-            delete detail?.video_url;
             if (detail) {
                 Object.assign(poi, detail);
             }

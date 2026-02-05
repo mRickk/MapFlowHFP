@@ -58,17 +58,22 @@ export const htmlMarkerIcon = (icon = "pin", color = '#555555', isMustHave = fal
     });
 };
 
-export const bubbleIcon = (size = 12) => {
-    const pixelSize = size * 4;
-
+export const bubbleIcon = (selected = false) => {
+    const pixelSize = 48;
+    let bubbleColor = "bg-bright";
+    let iconColor = "text-white";
+    if (!selected) {
+        bubbleColor = "bg-white border border-bright"
+        iconColor = "text-bright"
+    }
     return L.divIcon({
         html: `
-            <div class="relative flex items-center justify-center bg-bright shadow-lg" 
+            <div class="relative flex items-center justify-center ${bubbleColor} shadow-lg" 
                  style="width: ${pixelSize}px; height: ${pixelSize}px; 
                         border-radius: 50% 50% 50% 0; 
                         transform: rotate(-45deg);">
                 
-                <i class="bi bi-file-play text-white flex items-center justify-center" 
+                <i class="bi bi-file-play ${iconColor} flex items-center justify-center" 
                    style="transform: rotate(45deg); font-size: ${pixelSize / 2}px;">
                 </i>
             </div>`,

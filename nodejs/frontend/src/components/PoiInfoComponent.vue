@@ -1,41 +1,17 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { getUser, removePoiFromMap } from '@/services/userService';
-
 const props = defineProps({
   data: { type: Object, required: true },
-  onAdd: { type: Function, default: () => {} },
-  onRemove: { type: Function, default: () => {} },
-  onClose: { type: Function, default: () => {} }
+  isSaved: { type: Boolean, default: false }
 });
 
-const isAdded = ref(false);
-const savedPoisId = ref([]);
-
-const refreshData = () => {
-  const user = getUser();
-  const selectedMap = user.maps.find(m => m.selected);
-  if (selectedMap) {
-    savedPoisId.value = selectedMap.saved_poi.map(poi => poi.id);
-    isAdded.value = savedPoisId.value.includes(props.data.id);
-  }
-};
-
-onMounted(() => {
-  refreshData();
-});
+const emit = defineEmits(['add', 'remove', 'close']);
 
 const toggleAdd = () => {
-  const user = getUser();
-  const selectedMap = user.maps.find(m => m.selected);
-
-  if (isAdded.value) {
-    removePoiFromMap(selectedMap.id, props.data.id);
-    props.onRemove();
+  if (props.isSaved) {
+    emit('remove', props.data);
   } else {
-    props.onAdd();
+    emit('add', props.data);
   }
-  refreshData();
 };
 </script>
 
@@ -60,9 +36,9 @@ const toggleAdd = () => {
         <button 
           @click="toggleAdd" 
           class="cursor-pointer transition-transform active:scale-95 focus:outline-none"
-          :title="isAdded ? 'Rimuovi' : 'Aggiungi'"
+          :title="isSaved ? 'Rimuovi' : 'Aggiungi'"
         >
-          <svg v-if="isAdded" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-dash-circle-fill text-red" viewBox="0 0 16 16">
+          <svg v-if="isSaved" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-dash-circle-fill text-red" viewBox="0 0 16 16">
             <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1z"/>
           </svg>
 
@@ -72,7 +48,7 @@ const toggleAdd = () => {
         </button>
 
         <button 
-          @click="onClose"
+          @click="$emit('close')"
           class="bg-bright border border-lesslight rounded-full p-1 text-darkgray hover:text-red shadow-sm transition-colors cursor-pointer"
           title="Chiudi"
         >
