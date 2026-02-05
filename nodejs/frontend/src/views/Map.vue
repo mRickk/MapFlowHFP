@@ -1,6 +1,7 @@
 <script setup>
 import SelectedLegend from '@/components/SelectedLegend.vue';
 import InsertPOIModal from '@/components/InsertPOIModal.vue';
+import POIDetailsCard from '@/components/POIDetailsCard.vue';
 import SearchBar from '@/components/SearchBar.vue';
 import { temporaryMarkerIcon, htmlMarkerIcon } from '@/util/mapWaypoint';
 import { onMounted, ref, watch, computed } from 'vue';
@@ -16,6 +17,8 @@ const selectedLegendRef = ref(null);
 const markerLayerGroup = L.layerGroup();
 const tempMarkerLayer = L.layerGroup();
 const showInsertModal = ref(false);
+const showPoiDetails = ref(false);
+const selectedPoi = ref(null);
 const insertCoords = ref(null);
 const insertPoiData = ref({ name: '', icon: 'pin', color: 'red' });
 const searchQuery = ref('');
@@ -49,6 +52,8 @@ const renderMarkers = () => {
         const marker = L.marker([poi.lat, poi.lng], { icon });
         
         marker.on('click', () => {
+            selectedPoi.value = poi;
+            showPoiDetails.value = true;
             if (selectedLegendRef.value) {
                 selectedLegendRef.value.selectPoi(poi.id);
             }
@@ -65,6 +70,9 @@ const renderMarkers = () => {
         const marker = L.marker([poi.lat, poi.lng], { icon });
         
         marker.on('click', () => {
+            selectedPoi.value = poi;
+            showPoiDetails.value = true;
+            
             insertCoords.value = { lat: poi.lat, lng: poi.lng };
             insertPoiData.value = {
                 id: poi.id,
@@ -72,7 +80,7 @@ const renderMarkers = () => {
                 icon: poi.icon || 'pin',
                 color: poi.color || 'blue'
             };
-            showInsertModal.value = true;
+            // showInsertModal.value = true;
         });
         
         marker.addTo(markerLayerGroup);
@@ -169,6 +177,12 @@ onMounted(() => {
         @mapUpdated="handleMapUpdated"
     />
     
+    <POIDetailsCard 
+        :visible="showPoiDetails"
+        :poi="selectedPoi"
+        @close="showPoiDetails = false"
+    />
+
     <InsertPOIModal
         v-if="showInsertModal"
         :layers="availableLayers"
