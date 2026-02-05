@@ -139,7 +139,6 @@ const selectLayer = (name) => {
   selectedLayerName.value = selectedLayerName.value === name ? null : name;
 };
 
-// --- Modal Handlers ---
 
 const openLayerEdit = (layerName) => {
   const pois = groupedByLayer.value[layerName] || [];
@@ -246,8 +245,6 @@ const confirmRemovePoiTime = () => {
     removePoiTimeData.value = null;
   }
 };
-
-// --- Drag & Drop ---
 
 const onDragStart = (event, poi, fromLayer) => {
   event.dataTransfer.dropEffect = 'move';

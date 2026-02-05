@@ -8,6 +8,7 @@ import { getPOIs } from '@/services/poiService';
 import SelectedLegend from '@/components/SelectedLegend.vue';
 import SearchBar from '@/components/SearchBar.vue';
 import { bubbleIcon } from '@/util/mapWaypoint'
+import PoiInformationComponent from '@/components/PoiInformationComponent.vue';
 
 const searchQuery = ref('');
 const selectedPoi = ref(null);
@@ -55,10 +56,7 @@ onMounted(() => {
 const getInstagramEmbedUrl = (url) => {
     if (!url) return '';
     let cleanUrl = url.split('?')[0].replace(/\/$/, '');
-
-    if (!cleanUrl.endsWith('/embed')) {
-        cleanUrl = `${cleanUrl}/embed`;
-    }
+    cleanUrl = `${cleanUrl}/embed/captioned/`;
     
     return cleanUrl;
 };
@@ -75,30 +73,24 @@ const getInstagramEmbedUrl = (url) => {
     <div id="map" class="absolute inset-0 z-0"></div>
 
     <div v-if="isModalOpen" 
-     class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 p-4 transition-opacity"
+     class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 transition-opacity"
      @click.self="isModalOpen = false">
     
-    <div class="relative bg-zinc-900 rounded-2xl overflow-hidden w-full max-w-[450px] h-[800px] max-h-[90vh] flex flex-col">
-        
-        <div class="p-4 bg-zinc-800 text-white flex justify-between items-center">
-            <h3 class="font-medium truncate pr-4">{{ selectedPoi?.name }}</h3>
-            <button @click="isModalOpen = false" class="text-white hover:text-gray-300">
-                <i class="bi bi-x-lg"></i>
-            </button>
-        </div>
+        <div class="relative bg-white border border-lesslight rounded-lg overflow-hidden w-full max-w-[450px] h-[800px] max-h-[90vh] flex flex-col">
+            <PoiInformationComponent :data="selectedPoi" :onClose="() => { isModalOpen = false }" />
 
-        <div class="flex-1 bg-black flex items-center justify-center overflow-hidden">
-            <iframe 
-                :src="getInstagramEmbedUrl(selectedPoi?.video_url)"
-                class="w-full h-full border-0"
-                allowtransparency="true"
-                allowfullscreen="true"
-                frameborder="0"
-                scrolling="no">
-            </iframe>
+            <div class="flex-1 bg-gray-50 flex items-center justify-center overflow-hidden">
+                <iframe 
+                    :src="getInstagramEmbedUrl(selectedPoi?.video_url)"
+                    class="w-full h-full border-0"
+                    allowtransparency="true"
+                    allowfullscreen="true"
+                    frameborder="0"
+                    scrolling="no">
+                </iframe>
+            </div>
         </div>
     </div>
-</div>
 </template>
 
 <style>
