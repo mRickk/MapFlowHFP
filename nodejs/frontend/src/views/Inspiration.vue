@@ -272,8 +272,7 @@ onMounted(() => {
         @confirm="confirmRemovePoi"
         @cancel="showConfirmRemove = false"
     >
-        <p>Sei sicuro di voler rimuovere <strong>{{ selectedPoi?.name }}</strong> dalla mappa?</p>
-        <p class="text-sm text-gray-500 mt-2">Questa azione non può essere annullata.</p>
+        <p>Are you sure you want to remove <strong>{{ selectedPoi?.name }}</strong> from the map?</p>
     </ConfirmationModal>
     <InsertPOIModal
         v-if="isInsertModalOpen"

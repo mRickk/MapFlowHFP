@@ -5,7 +5,7 @@ import POIDetailsCard from '@/components/POIDetailsCard.vue';
 import SearchBar from '@/components/SearchBar.vue';
 import ConfirmationModal from '@/components/ConfirmationModal.vue';
 import { temporaryMarkerIcon, htmlMarkerIcon, minZoomForLabels, userIcon } from '@/util/mapWaypoint';
-import { onMounted, ref, watch, computed } from 'vue';
+import { onMounted, onUnmounted, ref, watch, computed } from 'vue';
 import L from 'leaflet';
 import 'leaflet-routing-machine';
 import { getUser, createPoiInMap, removePoiFromMap } from '@/services/userService';
@@ -26,6 +26,12 @@ const insertPoiData = ref({ name: '', icon: 'pin', color: 'red' });
 const searchQuery = ref('');
 const isLocationAvailable = ref(false);
 const userLocation = ref(null);
+const routeReminder = ref(null);
+const dismissedReminders = ref(new Set());
+const lastRouteDuration = ref(0);
+const nextPoiRef = ref(null);
+let routingControl = null;
+let statusCheckInterval = null;
 
 const availableLayers = computed(() => {
     if (!activeMap.value || !activeMap.value.saved_poi) return [];
@@ -113,6 +119,7 @@ const confirmRemovePoi = () => {
     removePoiFromMap(activeMap.value.id, selectedPoi.value.id);
     loadMapData();
     renderMarkers();
+    updateRoute();
     legendKey.value++; 
     
     showConfirmRemove.value = false;
@@ -136,12 +143,14 @@ const handleCreatePoi = (poiData) => {
     closeInsertModal();
     loadMapData();
     renderMarkers();
+    updateRoute();
     legendKey.value++;
 };
 
 const handleMapUpdated = () => {
     loadMapData();
     renderMarkers();
+    updateRoute();
 };
 
 const handleCenterPoi = (poiId) => {
@@ -166,6 +175,86 @@ const handlePoiSelected = (poi) => {
     selectedPoi.value = poi;
     showPoiDetails.value = true;
 };
+
+const checkRouteStatus = () => {
+    if (!nextPoiRef.value || lastRouteDuration.value === 0) {
+        routeReminder.value = null;
+        return;
+    }
+
+    const now = new Date();
+    const nextTime = new Date(nextPoiRef.value.datetime);
+    const arrivalTime = new Date(now.getTime() + lastRouteDuration.value * 1000);
+    
+    let potentialReminder = null;
+
+    if (arrivalTime > nextTime) {
+        potentialReminder = {
+            type: 'error',
+            message: `You are late for ${nextPoiRef.value.name}.${nextPoiRef.value.must_have ? "" : " We recommend skipping it."}`,
+            key: `${nextPoiRef.value.id}_late`
+        };
+    } else if ((nextTime - arrivalTime) < 10 * 60 * 1000) {
+         potentialReminder = {
+            type: 'warning',
+            message: `Warning: You will arrive at ${nextPoiRef.value.name} with less than 10 minutes to spare.`,
+            key: `${nextPoiRef.value.id}_soon`
+        };
+    }
+
+    if (potentialReminder && !dismissedReminders.value.has(potentialReminder.key)) {
+        if (routeReminder.value?.key !== potentialReminder.key) {
+             routeReminder.value = potentialReminder;
+        }
+    } else {
+        routeReminder.value = null;
+    }
+};
+
+const dismissReminder = () => {
+    if (routeReminder.value && routeReminder.value.key) {
+        dismissedReminders.value.add(routeReminder.value.key);
+    }
+    routeReminder.value = null;
+};
+
+const updateRoute = () => {
+    if (!activeMap.value || !activeMap.value.saved_poi || !mapInstance) return;
+    
+    const sortedPois = [...activeMap.value.saved_poi]
+        .filter(p => p.datetime) 
+        .sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
+
+    if (sortedPois.length < 2) return;
+
+    const now = new Date();
+    const nextIndex = sortedPois.findIndex(p => new Date(p.datetime) > now);
+    
+    if (nextIndex === -1 || nextIndex === 0) {
+        if (routingControl) {
+            routingControl.setWaypoints([]);
+        }
+        nextPoiRef.value = null;
+        routeReminder.value = null;
+        return;
+    }
+
+    const nextPoi = sortedPois[nextIndex];
+    const prevPoi = sortedPois[nextIndex - 1];
+    
+    nextPoiRef.value = nextPoi;
+
+    if (routingControl) {
+        routingControl.setWaypoints([
+            L.latLng(prevPoi.lat, prevPoi.lng),
+            L.latLng(nextPoi.lat, nextPoi.lng)
+        ]);
+    }
+};
+
+onUnmounted(() => {
+    if (statusCheckInterval) clearInterval(statusCheckInterval);
+});
 
 const handleLocateUser = () => {
     if (!mapInstance) return;
@@ -215,22 +304,14 @@ onMounted(() => {
     markerLayerGroup.addTo(mapInstance);
     tempMarkerLayer.addTo(mapInstance);
 
-    const startPoi = activeMap.value.saved_poi[0];
-    const endPoi = activeMap.value.saved_poi[1];
-
-    const routingWaypoints = [
-      L.latLng(startPoi.lat, startPoi.lng),
-      L.latLng(endPoi.lat, endPoi.lng)
-    ];
-
-    var control = L.Routing.control({
-      waypoints: routingWaypoints,
+    routingControl = L.Routing.control({
+      waypoints: [], 
       hints: {
         locations: []
       },
       router: L.Routing.osrmv1({
         serviceUrl: 'https://router.project-osrm.org/route/v1',
-        profile: 'routed-bike',
+        profile: 'foot',
         timeout: 300000,
       }),
       show: false,
@@ -242,7 +323,7 @@ onMounted(() => {
       }
     }).addTo(mapInstance);
 
-    control.on('routesfound', function(e) {
+    routingControl.on('routesfound', function(e) {
       const routes = e.routes;
       const summary = routes[0].summary;
 
@@ -250,9 +331,18 @@ onMounted(() => {
 
       const distanceInKm = (summary.totalDistance / 1000).toFixed(2);
 
+      lastRouteDuration.value = summary.totalTime;
+      checkRouteStatus();
+
       console.log('Tempo stimato: ' + timeInMinutes + ' minuti');
       console.log('Distanza: ' + distanceInKm + ' km');
     });
+
+    updateRoute();
+    statusCheckInterval = setInterval(() => {
+        updateRoute();
+        checkRouteStatus();
+    }, 60000);
 
     const updateLabelsVisibility = () => {
         const mapEl = document.getElementById('map');
@@ -314,6 +404,17 @@ onMounted(() => {
             class="" 
             @poi-selected="handlePoiSelected"
         />
+        <div v-if="routeReminder" 
+             :class="['mt-4 p-4 rounded-lg shadow-lg text-white font-medium transition-all duration-300 flex justify-between items-center', 
+                      routeReminder.type === 'error' ? 'bg-red-600' : 'bg-yellow-600']">
+            <div class="flex items-center">
+                 <i :class="['bi mr-2 text-xl', routeReminder.type === 'error' ? 'bi-exclamation-circle-fill' : 'bi-exclamation-triangle-fill']"></i>
+                 <span>{{ routeReminder.message }}</span>
+            </div>
+            <button @click="dismissReminder" class="ml-4 focus:outline-none hover:opacity-80">
+                <i class="bi bi-x-lg text-lg"></i>
+            </button>
+        </div>
     </div>
     
     <SelectedLegend 
@@ -350,8 +451,7 @@ onMounted(() => {
         @confirm="confirmRemovePoi"
         @cancel="showConfirmRemove = false"
     >
-        <p>Sei sicuro di voler rimuovere <strong>{{ selectedPoi?.name }}</strong> dalla mappa?</p>
-        <p class="text-sm text-gray-500 mt-2">Questa azione non può essere annullata.</p>
+        <p>Are you sure you want to remove <strong>{{ selectedPoi?.name }}</strong> from the map?</p>
     </ConfirmationModal>
     <InsertPOIModal
         v-if="showInsertModal"
