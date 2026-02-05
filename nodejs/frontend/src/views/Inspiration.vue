@@ -3,6 +3,21 @@ import { onMounted, ref } from 'vue';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
+import { getUser } from '@/services/userService';
+import SelectedLegend from '@/components/SelectedLegend.vue';
+import SearchBar from '@/components/SearchBar.vue';
+
+const searchQuery = ref('');
+
+const redIcon = L.icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+
 const htmlIcon = L.divIcon({
     html: '<div style="background-color: #3b82f6; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white;"></div>',
     className: 'bi-bank2',
@@ -30,7 +45,7 @@ onMounted(() => {
     }).addTo(mapInstance);
 
     mapInstance.on('click', (e) => {
-        addWaypoint(e.latlng.lat, e.latlng.lng, "Punto Utente", htmlIcon);
+        addWaypoint(e.latlng.lat, e.latlng.lng, "Punto Utente", redIcon);
     });
 
     addWaypoint(41.8902, 12.4922, "Capitale", htmlIcon);
@@ -43,6 +58,13 @@ onMounted(() => {
 </script>
 
 <template>
+    <div class="absolute top-0 left-0 w-full z-10 p-8">
+        <SearchBar 
+            v-model="searchQuery"
+            class="" 
+        />
+    </div>
+    <SelectedLegend :mapId="getUser().maps.find(map => map.selected).id" class="z-10"/>
     <div id="map" class="absolute inset-0 z-0"></div>
 </template>
 
