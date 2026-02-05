@@ -13,9 +13,9 @@ const badges = ref([]);
 const user = ref(null);
 onMounted(() => {
   user.value = getUser();
-  const country_number = [...new Set(user.value.maps.flatMap(m => m.saved_poi).map(poi => poi.country.toLowerCase()))].length;
-  const museum_number = user.value.maps.flatMap(m => m.saved_poi).filter(poi => poi.category.toLowerCase() === 'museum').length;
-  const parks_number = user.value.maps.flatMap(m => m.saved_poi).filter(poi => poi.category.toLowerCase() === 'park').length;
+  const country_number = [...new Set(user.value.maps.flatMap(m => m.saved_poi).filter(poi => poi.country).map(poi => poi.country.toLowerCase()))].length;
+  const museum_number = user.value.maps.flatMap(m => m.saved_poi).filter(poi => poi.category && poi.category.toLowerCase() === 'museum').length;
+  const parks_number = user.value.maps.flatMap(m => m.saved_poi).filter(poi => poi.category && poi.category.toLowerCase() === 'park').length;
   const map_number = user.value.maps.length;
 
   badges.value = [

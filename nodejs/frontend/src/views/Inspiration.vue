@@ -1,22 +1,27 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-import { getUser } from '@/services/userService';
+import { getUser, createPoiInMap } from '@/services/userService';
 import { getPOIs } from '@/services/poiService';
-import SelectedLegend from '@/components/SelectedLegend.vue';
-import SearchBar from '@/components/SearchBar.vue';
 import { bubbleIcon } from '@/util/mapWaypoint'
 import PoiInfoComponent from '../components/PoiInfoComponent.vue';
+import InsertPOIModal from '@/components/InsertPOIModal.vue';
+import { htmlMarkerIcon } from '@/util/mapWaypoint';
 
 const searchQuery = ref('');
 const selectedPoi = ref(null);
-const isModalOpen = ref(false);
+const isVideoModalOpen = ref(false);
+const isInsertModalOpen = ref(false);
+const insertPoiData = ref({ name: '', icon: 'pin', color: 'red' });
 
-function apriModaleVideo(poi) {
+const activeMapMapId = ref(null);
+const activeMap = ref(null);
+
+function openVideoModal(poi) {
     selectedPoi.value = poi;
-    isModalOpen.value = true;
+    isVideoModalOpen.value = true;
 }
 
 let mapInstance = null;
@@ -25,14 +30,35 @@ const addWaypoint = (p, customIcon = null) => {
     const marker = L.marker([p.lat, p.lng], { icon: customIcon }).addTo(mapInstance);
 
     marker.on('click', () => {
-        apriModaleVideo(p);
+        openVideoModal(p);
     });
     return marker;
 };
 
+const loadMapData = () => {
+    const user = getUser();
+    if (user && user.maps) {
+        const map = user.maps.find(m => m.selected);
+        activeMap.value = map;
+        activeMapMapId.value = map ? map.id : null;
+    }
+};
+
+const availableLayers = computed(() => {
+    if (!activeMap.value || !activeMap.value.saved_poi) return [];
+    const layers = new Set();
+    activeMap.value.saved_poi.forEach(p => {
+        if (p.layer) layers.add(p.layer);
+    });
+    return Array.from(layers).sort();
+});
+
 onMounted(() => {
-    const pois = getPOIs().filter(poi => poi.video_url);
-    const bounds = L.latLngBounds(pois.map(poi => [poi.lat, poi.lng]));
+    loadMapData();
+    const video_pois = getPOIs().filter(poi => poi.video_url);
+    const saved_pois = activeMap.value.saved_poi;
+
+    const bounds = L.latLngBounds(saved_pois.map(poi => [poi.lat, poi.lng]));
     
     mapInstance = L.map('map', {
         zoomControl: false
@@ -44,8 +70,15 @@ onMounted(() => {
 
     mapInstance.fitBounds(bounds, { padding: [50, 50] });
 
-    pois.forEach(p => {
+    video_pois.forEach(p => {
         addWaypoint(p, bubbleIcon());
+    });
+
+    activeMap.value.saved_poi.forEach(poi => {
+        const icon = htmlMarkerIcon(poi.icon || "pin", poi.color || "blue", poi.must_have, true);
+        const marker = L.marker([poi.lat, poi.lng], { icon });
+        
+        marker.addTo(mapInstance);
     });
 
     setTimeout(() => {
@@ -60,24 +93,53 @@ const getInstagramEmbedUrl = (url) => {
     
     return cleanUrl;
 };
+
+const handleCreatePoi = (poiData) => {
+    if (!selectedPoi.value || !activeMap.value) return;
+
+    const payload = {
+        ...poiData,
+        lat: selectedPoi.value.lat,
+        lng: selectedPoi.value.lng
+    };
+
+    if (insertPoiData.value && insertPoiData.value.id) {
+        payload.id = insertPoiData.value.id;
+    }
+
+    createPoiInMap(activeMap.value.id, payload);
+
+    isInsertModalOpen.value = false;
+    isVideoModalOpen.value = true;
+    loadMapData();
+};
 </script>
 
 <template>
-    <div class="absolute top-0 left-0 w-full z-10 p-8">
-        <SearchBar 
-            v-model="searchQuery"
-            class="" 
-        />
-    </div>
-    <SelectedLegend :mapId="getUser().maps.find(map => map.selected).id" class="z-10"/>
     <div id="map" class="absolute inset-0 z-0"></div>
 
-    <div v-if="isModalOpen" 
+    <div v-if="isVideoModalOpen" 
      class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 transition-opacity"
-     @click.self="isModalOpen = false">
+     @click.self="isVideoModalOpen = false">
     
         <div class="relative bg-white border border-lesslight rounded-lg overflow-hidden w-full max-w-[450px] h-[800px] max-h-[90vh] flex flex-col">
-            <PoiInfoComponent :data="selectedPoi" :onClose="() => { isModalOpen = false }" />
+            <PoiInfoComponent 
+                :data="selectedPoi"
+                :onAdd="() => { 
+                    insertPoiData = {
+                        id: selectedPoi.id,
+                        name: selectedPoi.name,
+                        icon: selectedPoi.icon || 'pin',
+                        color: selectedPoi.color || 'blue'
+                    };
+                    isVideoModalOpen = false;
+                    isInsertModalOpen = true;
+                }"
+                :onRemove="() => {
+                    loadMapData();
+                }"
+                :onClose="() => { isVideoModalOpen = false }" 
+            />
 
             <div class="flex-1 bg-gray-50 flex items-center justify-center overflow-hidden">
                 <iframe 
@@ -91,6 +153,18 @@ const getInstagramEmbedUrl = (url) => {
             </div>
         </div>
     </div>
+
+    <InsertPOIModal
+        v-if="isInsertModalOpen"
+        :layers="availableLayers"
+        :initialName="insertPoiData.name"
+        :initialIcon="insertPoiData.icon"
+        :initialColor="insertPoiData.color"
+        @close="() => {
+            isInsertModalOpen = false;
+        }"
+        @create="handleCreatePoi"
+    />
 </template>
 
 <style>
