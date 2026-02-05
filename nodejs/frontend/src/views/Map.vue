@@ -64,7 +64,7 @@ const renderMarkers = () => {
 
     const allPois = getPOIs();
     allPois.forEach(poi => {
-        if (activeMap.value.saved_poi.find(p => p.id === poi.id)) return; // Skip
+        if (activeMap.value.saved_poi.find(p => p.id === poi.id)) return;
     
         const icon = htmlMarkerIcon(poi.icon || "pin", poi.color || "blue", false, false);
         const marker = L.marker([poi.lat, poi.lng], { icon });
@@ -80,7 +80,6 @@ const renderMarkers = () => {
                 icon: poi.icon || 'pin',
                 color: poi.color || 'blue'
             };
-            // showInsertModal.value = true;
         });
         
         marker.addTo(markerLayerGroup);
