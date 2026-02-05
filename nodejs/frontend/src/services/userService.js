@@ -1,7 +1,17 @@
 import usersObject from '@/assets/user.json';
+import poiObject from '@/assets/poi.json';
 import { getItem, setItem, initData, StorageKeys } from '@/services/storageService';
 
 export function initializeUserStorage() {
+    usersObject.maps.forEach(map => {
+        map.saved_poi?.forEach(poi => {
+            const detail = poiObject.find(p => p.id === poi.id);
+            if (detail) {
+                Object.assign(poi, detail);
+            }
+        });
+    });
+
     initData(StorageKeys.USER, usersObject);
 }
 
@@ -111,14 +121,19 @@ export function addPoiToMap(mapId, id, datetime = null, color = null, layer = nu
         const exists = map.saved_poi.some(p => p.id === id);
 
         if (!exists) {
-            map.saved_poi.push({
-                id: id,
-                datetime: datetime,
-                color: color || "gray",
-                layer: layer || "",
-                must_have: must_have
-            });
-            saveUser(user);
+            const basePoi = poiObject.find(p => p.id === id);
+            
+            if (basePoi) {
+                const newSavedPoi = {
+                    ...basePoi,
+                    datetime: datetime,
+                    color: color || "gray",
+                    layer: layer || "",
+                    must_have: must_have
+                };
+                map.saved_poi.push(newSavedPoi);
+                saveUser(user);
+            }
         }
     }
 }
@@ -162,4 +177,34 @@ export function isPoiSaved(mapId, poiId) {
     if (!map) return false;
 
     return map.saved_poi.some(p => p.id === poiId);
+}
+
+export function createPoiInMap(mapId, poiData) {
+    const user = getUser();
+    if (!user) return;
+
+    const map = user.maps.find(m => m.id === mapId);
+    if (!map) return;
+
+    const newId = poiData.id || Date.now();
+
+    const newPoi = {
+        ...poiData,
+        id: newId
+    };
+
+    if (!map.saved_poi) {
+        map.saved_poi = [];
+    }
+
+    const existingIndex = map.saved_poi.findIndex(p => p.id === newId);
+    if (existingIndex !== -1) {
+        console.warn("POI with this ID already exists in map, updating instead.");
+        map.saved_poi[existingIndex] = { ...map.saved_poi[existingIndex], ...newPoi };
+    } else {
+        map.saved_poi.push(newPoi);
+    }
+    
+    saveUser(user);
+    return newPoi;
 }
