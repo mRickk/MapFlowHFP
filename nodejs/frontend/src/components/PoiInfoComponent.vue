@@ -1,23 +1,41 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import { getUser, removePoiFromMap } from '@/services/userService';
 
 const props = defineProps({
-  data: {
-    type: Object,
-    required: true,
-  },
-  onClose: {
-    type: Function,
-    default: () => {
-      console.log("Nessuna funzione onClose definita");
-    }
-  }
+  data: { type: Object, required: true },
+  onAdd: { type: Function, default: () => {} },
+  onRemove: { type: Function, default: () => {} },
+  onClose: { type: Function, default: () => {} }
 });
 
 const isAdded = ref(false);
+const savedPoisId = ref([]);
+
+const refreshData = () => {
+  const user = getUser();
+  const selectedMap = user.maps.find(m => m.selected);
+  if (selectedMap) {
+    savedPoisId.value = selectedMap.saved_poi.map(poi => poi.id);
+    isAdded.value = savedPoisId.value.includes(props.data.id);
+  }
+};
+
+onMounted(() => {
+  refreshData();
+});
 
 const toggleAdd = () => {
-  isAdded.value = !isAdded.value;
+  const user = getUser();
+  const selectedMap = user.maps.find(m => m.selected);
+
+  if (isAdded.value) {
+    removePoiFromMap(selectedMap.id, props.data.id);
+    props.onRemove();
+  } else {
+    props.onAdd();
+  }
+  refreshData();
 };
 </script>
 
