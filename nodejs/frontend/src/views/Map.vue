@@ -3,8 +3,8 @@ import SelectedLegend from '@/components/SelectedLegend.vue';
 import InsertPOIModal from '@/components/InsertPOIModal.vue';
 import POIDetailsCard from '@/components/POIDetailsCard.vue';
 import SearchBar from '@/components/SearchBar.vue';
-import { temporaryMarkerIcon, htmlMarkerIcon } from '@/util/mapWaypoint';
-import { onMounted, ref, watch, computed } from 'vue';
+import { temporaryMarkerIcon, htmlMarkerIcon, minZoomForLabels } from '@/util/mapWaypoint';
+import { onMounted, ref, computed } from 'vue';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { getUser, createPoiInMap } from '@/services/userService';
@@ -48,7 +48,7 @@ const renderMarkers = () => {
     if (!activeMap.value || !activeMap.value.saved_poi) return;
 
     activeMap.value.saved_poi.forEach(poi => {
-        const icon = htmlMarkerIcon(poi.icon || "pin", poi.color || "blue", poi.must_have, true);
+        const icon = htmlMarkerIcon(poi.icon || "pin", poi.color || "blue", poi.must_have, true, 30, poi.name);
         const marker = L.marker([poi.lat, poi.lng], { icon });
         
         marker.on('click', () => {
@@ -63,7 +63,7 @@ const renderMarkers = () => {
     allPois.forEach(poi => {
         if (activeMap.value.saved_poi.find(p => p.id === poi.id)) return;
     
-        const icon = htmlMarkerIcon(poi.icon || "pin", poi.color || "blue", false, false);
+        const icon = htmlMarkerIcon(poi.icon || "pin", poi.color || "blue", false, false, 30, poi.name);
         const marker = L.marker([poi.lat, poi.lng], { icon });
         
         marker.on('click', () => {
@@ -129,12 +129,6 @@ const handleCenterPoi = (poiId) => {
     if (poi && mapInstance) {
         mapInstance.setView([poi.lat, poi.lng], 18);
         selectedPoi.value = poi;
-        // The user didn't explicitly ask to show details here, but "map centers on the poi" usually implies showing it. 
-        // "if it's clicked again the legend closes itself and the map centers on the poi"
-        // It doesn't say "open details". But usually centering on a POI implies selecting it.
-        // I will NOT open details to be safe, just center. 
-        // Wait, if I set selectedPoi.value, the POIDetailsCard might show if showPoiDetails is true.
-        // showPoiDetails is separate.
     }
 };
 
@@ -172,6 +166,18 @@ onMounted(() => {
 
     markerLayerGroup.addTo(mapInstance);
     tempMarkerLayer.addTo(mapInstance);
+
+    const updateLabelsVisibility = () => {
+        const mapEl = document.getElementById('map');
+        if (!mapEl) return;
+        if (mapInstance.getZoom() >= minZoomForLabels) {
+            mapEl.classList.add('show-marker-labels');
+        } else {
+            mapEl.classList.remove('show-marker-labels');
+        }
+    };
+    mapInstance.on('zoomend', updateLabelsVisibility);
+    updateLabelsVisibility();
 
     mapInstance.on('contextmenu', (e) => {
         tempMarkerLayer.clearLayers();
@@ -243,5 +249,9 @@ html, body, #app {
 
 .leaflet-control-container {
     z-index: 10; 
+}
+
+.show-marker-labels .marker-label {
+    display: block !important;
 }
 </style>

@@ -28,7 +28,7 @@ const isActive = (metaKey) => {
           class="absolute flex items-center justify-center transition-all duration-300 ease-in-out rounded-full"
           :class="[
             isActive(item.metaKey)
-              ? 'bg-bright w-14 h-14 -top-6 border-[5px] border-white shadow-lg'
+              ? 'bg-brighter w-14 h-14 -top-6 border-[5px] border-white shadow-lg'
               : 'bg-transparent w-auto h-auto top-1/2 -translate-y-1/2'
           ]"
         >

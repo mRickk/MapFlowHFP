@@ -1,7 +1,7 @@
 import L from 'leaflet';
 import { getIconClass, getColorValue } from "./colorIcons";
 
-export const htmlMarkerIcon = (icon = "pin", color = '#555555', isMustHave = false, isSaved = false, size = 30) => {
+export const htmlMarkerIcon = (icon = "pin", color = '#555555', isMustHave = false, isSaved = false, size = 30, name = null) => {
     if (!isSaved) { isMustHave = false; }
     if (isMustHave) { isSaved = true; }
 
@@ -15,6 +15,28 @@ export const htmlMarkerIcon = (icon = "pin", color = '#555555', isMustHave = fal
     const borderColor = isMustHave ? '#1d1b1c' : 'rgba(0,0,0,0)';
 
     const iconClass = getIconClass(icon);
+
+    const labelHtml = name ? `
+        <div class="marker-label" style="
+            display: none;
+            position: absolute;
+            left: ${pinSize + 8}px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #fffaf6;
+            ${isMustHave ? 'border: 2px solid #1d1b1c;' : ''}
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 14px;
+            color: ${cVal};
+            white-space: nowrap;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            z-index: 10;
+        ">
+            ${name}
+        </div>
+    ` : '';
 
     return L.divIcon({
         className: '',
@@ -49,6 +71,7 @@ export const htmlMarkerIcon = (icon = "pin", color = '#555555', isMustHave = fal
                 ">
                     <i class="bi ${iconClass}" style="color: ${iconColor}; font-size: ${pinSize * 0.50}px;"></i>
                 </div>
+                ${labelHtml}
             </div>
         `,
         iconSize: [pinSize, pinSize],
@@ -58,19 +81,44 @@ export const htmlMarkerIcon = (icon = "pin", color = '#555555', isMustHave = fal
     });
 };
 
-export const bubbleIcon = (size = 12) => {
+export const bubbleIcon = (size = 12, name = null) => {
     const pixelSize = size * 4;
+    const textColor = '#333333';
+
+    const labelHtml = name ? `
+        <div class="marker-label" style="
+            display: none;
+            position: absolute;
+            left: ${pixelSize + 5}px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #ffcdba;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 14px;
+            color: ${textColor};
+            white-space: nowrap;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            z-index: 10;
+        ">
+            ${name}
+        </div>
+    ` : '';
 
     return L.divIcon({
         html: `
-            <div class="relative flex items-center justify-center bg-bright shadow-lg" 
-                 style="width: ${pixelSize}px; height: ${pixelSize}px; 
-                        border-radius: 50% 50% 50% 0; 
-                        transform: rotate(-45deg);">
-                
-                <i class="bi bi-file-play text-white flex items-center justify-center" 
-                   style="transform: rotate(45deg); font-size: ${pixelSize / 2}px;">
-                </i>
+            <div style="position: relative; width: ${pixelSize}px; height: ${pixelSize}px;">
+                <div class="relative flex items-center justify-center bg-brighter shadow-lg" 
+                     style="width: 100%; height: 100%; 
+                            border-radius: 50% 50% 50% 0; 
+                            transform: rotate(-45deg);">
+                    
+                    <i class="bi bi-file-play-fill text-white flex items-center justify-center" 
+                       style="transform: rotate(45deg); font-size: ${pixelSize / 2}px;">
+                    </i>
+                </div>
+                ${labelHtml}
             </div>`,
         className: '',
         iconSize: [pixelSize, pixelSize],
@@ -86,3 +134,5 @@ export const temporaryMarkerIcon = () => L.icon({
   popupAnchor: [1, -34],
   shadowSize: [41, 41]
 });
+
+export const minZoomForLabels = 14;

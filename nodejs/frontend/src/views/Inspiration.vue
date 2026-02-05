@@ -5,7 +5,7 @@ import 'leaflet/dist/leaflet.css';
 
 import { getUser, createPoiInMap } from '@/services/userService';
 import { getPOIs } from '@/services/poiService';
-import { bubbleIcon, htmlMarkerIcon } from '@/util/mapWaypoint';
+import { bubbleIcon, htmlMarkerIcon, minZoomForLabels } from '@/util/mapWaypoint';
 import PoiInfoComponent from '../components/PoiInfoComponent.vue';
 import InsertPOIModal from '@/components/InsertPOIModal.vue';
 
@@ -86,14 +86,26 @@ const initMap = () => {
     mapInstance.fitBounds(bounds, { padding: [50, 50] });
 
     videoPois.forEach(p => {
-        const marker = L.marker([p.lat, p.lng], { icon: bubbleIcon() }).addTo(mapInstance);
+        const marker = L.marker([p.lat, p.lng], { icon: bubbleIcon(12, p.name) }).addTo(mapInstance);
         marker.on('click', () => openVideoModal(p));
     });
 
     savedPois.forEach(poi => {
-        const icon = htmlMarkerIcon(poi.icon || "pin", poi.color || "blue", poi.must_have, true);
+        const icon = htmlMarkerIcon(poi.icon || "pin", poi.color || "blue", poi.must_have, true, 30, poi.name);
         L.marker([poi.lat, poi.lng], { icon }).addTo(mapInstance);
     });
+
+    const updateLabelsVisibility = () => {
+        const mapEl = document.getElementById('map');
+        if (!mapEl) return;
+        if (mapInstance.getZoom() >= minZoomForLabels) {
+            mapEl.classList.add('show-marker-labels');
+        } else {
+            mapEl.classList.remove('show-marker-labels');
+        }
+    };
+    mapInstance.on('zoomend', updateLabelsVisibility);
+    updateLabelsVisibility();
 
     setTimeout(() => {
         mapInstance.invalidateSize();
@@ -157,5 +169,9 @@ html, body, #app {
 
 .leaflet-control-container {
     z-index: 10; 
+}
+
+.show-marker-labels .marker-label {
+    display: block !important;
 }
 </style>
