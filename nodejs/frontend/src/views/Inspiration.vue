@@ -8,7 +8,7 @@ import { getPOIs } from '@/services/poiService';
 import SelectedLegend from '@/components/SelectedLegend.vue';
 import SearchBar from '@/components/SearchBar.vue';
 import { bubbleIcon } from '@/util/mapWaypoint'
-import PoiInformationComponent from '@/components/PoiInformationComponent.vue';
+import PoiInfoComponent from '../components/PoiInfoComponent.vue';
 
 const searchQuery = ref('');
 const selectedPoi = ref(null);
@@ -77,7 +77,7 @@ const getInstagramEmbedUrl = (url) => {
      @click.self="isModalOpen = false">
     
         <div class="relative bg-white border border-lesslight rounded-lg overflow-hidden w-full max-w-[450px] h-[800px] max-h-[90vh] flex flex-col">
-            <PoiInformationComponent :data="selectedPoi" :onClose="() => { isModalOpen = false }" />
+            <PoiInfoComponent :data="selectedPoi" :onClose="() => { isModalOpen = false }" />
 
             <div class="flex-1 bg-gray-50 flex items-center justify-center overflow-hidden">
                 <iframe 

@@ -146,20 +146,6 @@
   },
   {
     "id": 12,
-    "name": "Forno Ceralli",
-    "address": "Piazza Bambocci, 15",
-    "city": "Rome",
-    "country": "Italy",
-    "val": 4.3,
-    "category": "Bakery",
-    "icon": "restaurant",
-    "color": "red",
-    "lat": 41.80969845340661,
-    "lng": 12.68084092622037,
-    "video_url": "https://www.instagram.com/reels/DM2hUbgIFWl/"
-  },
-  {
-    "id": 13,
     "name": "Fratelli TRECCA",
     "address": "Via dei Cerchi, 55",
     "city": "Rome",
