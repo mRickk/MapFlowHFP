@@ -69,7 +69,7 @@ const endDrag = () => {
 <transition name="slide-up">
     <div 
         v-if="visible"
-        class="fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-[0_-4px_20px_rgba(0,0,0,0.15)] z-[9999] flex flex-col overflow-hidden"
+        class="fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-[0_-4px_20px_rgba(0,0,0,0.15)] z-[100] flex flex-col overflow-hidden"
         :class="{ 'transition-height duration-300 ease-out': !isDragging }"
         :style="{ height: cardHeight + 'px' }"
     >
@@ -81,14 +81,14 @@ const endDrag = () => {
             <div class="w-16 h-1.5 bg-gray-300 rounded-full"></div>
         </div>
 
-        <div class="flex-1 overflow-y-auto px-6 pb-6 space-y-6">
-            <PoiInfoComponent v-if="poi" :data="poi" />
+        <div class="flex-1 overflow-y-auto pb-6 space-y-6">
+            <PoiInfoComponent v-if="poi" :data="poi" :onClose="() => emit('close')" />
 
-            <div v-if="poi && poi.images_url && poi.images_url.length > 0" class="flex flex-col gap-4">
+            <div v-if="poi && poi.images_url && poi.images_url.length > 0" class="flex flex-col gap-4 px-2">
                 <div 
                     v-for="(img, index) in poi.images_url" 
                     :key="index"
-                    class="w-full h-48 rounded-2xl overflow-hidden bg-gray-100 shadow-sm border border-gray-100"
+                    class="w-full h-50 rounded-2xl overflow-hidden bg-gray-100 shadow-sm border border-gray-100"
                 >
                     <img 
                         :src="img" 
