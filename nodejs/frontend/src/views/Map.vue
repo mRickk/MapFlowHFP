@@ -2,7 +2,7 @@
 import SelectedLegend from '@/components/SelectedLegend.vue';
 import InsertPOIModal from '@/components/InsertPOIModal.vue';
 import SearchBar from '@/components/SearchBar.vue';
-import { redMarkerIcon, htmlMarkerIcon } from '@/util/mapWaypoint';
+import { temporaryMarkerIcon, htmlMarkerIcon } from '@/util/mapWaypoint';
 import { onMounted, ref, watch, computed } from 'vue';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -134,7 +134,7 @@ onMounted(() => {
 
     mapInstance.on('contextmenu', (e) => {
         tempMarkerLayer.clearLayers();
-        const marker = L.marker(e.latlng, { icon: redMarkerIcon() });
+        const marker = L.marker(e.latlng, { icon: temporaryMarkerIcon() });
         marker.addTo(tempMarkerLayer);
         insertCoords.value = e.latlng;
         
