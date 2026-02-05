@@ -104,7 +104,14 @@ onMounted(() => {
     
     mapInstance = L.map('map', {
         zoomControl: false
-    }).setView([41.9028, 12.4964], 6);
+    });
+
+    if (activeMap.value && activeMap.value.saved_poi && activeMap.value.saved_poi.length > 0) {
+        const bounds = L.latLngBounds(activeMap.value.saved_poi.map(p => [p.lat, p.lng]));
+        mapInstance.fitBounds(bounds, { padding: [50, 50] });
+    } else {
+        mapInstance.setView([41.9028, 12.4964], 6);
+    }
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap'
