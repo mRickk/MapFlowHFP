@@ -1,7 +1,18 @@
 import usersObject from '@/assets/user.json';
+import poiObject from '@/assets/poi.json';
 import { getItem, setItem, initData, StorageKeys } from '@/services/storageService';
 
 export function initializeUserStorage() {
+    usersObject.maps.forEach(map => {
+        map.saved_poi?.forEach(poi => {
+            const detail = poiObject.find(p => p.id === poi.id);
+            delete detail?.video_url;
+            if (detail) {
+                Object.assign(poi, detail);
+            }
+        });
+    });
+
     initData(StorageKeys.USER, usersObject);
 }
 
@@ -111,14 +122,19 @@ export function addPoiToMap(mapId, id, datetime = null, color = null, layer = nu
         const exists = map.saved_poi.some(p => p.id === id);
 
         if (!exists) {
-            map.saved_poi.push({
-                id: id,
-                datetime: datetime,
-                color: color || "gray",
-                layer: layer || "",
-                must_have: must_have
-            });
-            saveUser(user);
+            const basePoi = poiObject.find(p => p.id === id);
+            
+            if (basePoi) {
+                const newSavedPoi = {
+                    ...basePoi,
+                    datetime: datetime,
+                    color: color || "gray",
+                    layer: layer || "",
+                    must_have: must_have
+                };
+                map.saved_poi.push(newSavedPoi);
+                saveUser(user);
+            }
         }
     }
 }

@@ -4,7 +4,6 @@ import { formatTime, getCurrentLocalISO } from '@/util/dateTime.js';
 import { getIconClass, getColorValue } from '@/util/colorIcons';
 import { updatePoiInMap, removePoiFromMap } from '@/services/userService';
 import { getMap } from '@/services/userService';
-import { getPOI } from '@/services/poiService';
 
 import LayerEditModal from './LayerEditModal.vue';
 import POIEditModal from './POIEditModal.vue';
@@ -21,7 +20,6 @@ const props = defineProps({
 const isOpen = ref(false);
 const activeTab = ref('layers');
 const mapData = ref(null);
-const poiDetails = ref({});
 const collapsedGroups = ref({});
 const layers = ref([]);
 const selectedPoiId = ref(null);
@@ -52,10 +50,6 @@ const fetchMapData = async (id) => {
   return await getMap(id);
 };
 
-const fetchPoiDetails = async (id) => {
-  return await getPOI(id);
-};
-
 onMounted(async () => {
   if (props.mapId) {
     const data = await fetchMapData(props.mapId);
@@ -65,8 +59,6 @@ onMounted(async () => {
       const initialLayers = new Set();
       for (const poi of data.saved_poi) {
         initialLayers.add(poi.layer || 'Uncategorized');
-        const detail = await fetchPoiDetails(poi.id);
-        poiDetails.value[poi.id] = detail;
       }
       layers.value = Array.from(initialLayers).sort();
     }
@@ -75,10 +67,7 @@ onMounted(async () => {
 
 const enrichedPois = computed(() => {
   if (!mapData.value || !mapData.value.saved_poi) return [];
-  return mapData.value.saved_poi.map(poi => ({
-    ...poi,
-    details: poiDetails.value[poi.id] || {}
-  }));
+  return mapData.value.saved_poi;
 });
 
 const groupedByLayer = computed(() => {
@@ -198,7 +187,7 @@ const savePoi = (newData) => {
   if (editingPoiData.value) {
     const poi = mapData.value.saved_poi.find(p => p.id === editingPoiData.value.id);
     if (poi) {
-      poiDetails.value[poi.id].name = newData.name;
+      poi.name = newData.name;
       poi.color = newData.color;
       poi.icon = newData.icon;
       poi.must_have = newData.mustHave;
@@ -350,7 +339,7 @@ const movePoi = (poiId, toLayer) => {
       
       <POIEditModal
         v-if="showPoiEdit"
-        :name="editingPoiData?.details?.name"
+        :name="editingPoiData?.name"
         :color="editingPoiData?.color"
         :icon="editingPoiData?.icon"
         :mustHave="editingPoiData?.must_have"
@@ -360,7 +349,7 @@ const movePoi = (poiId, toLayer) => {
 
       <TimelineEditModal 
         v-if="showTimelineEdit"
-        :name="editingPoiData?.details?.name"
+        :name="editingPoiData?.name"
         :dateTime="editingPoiData?.datetime || getCurrentLocalISO()"
         @save="saveTimeline"
         @close="showTimelineEdit = false"
@@ -372,7 +361,7 @@ const movePoi = (poiId, toLayer) => {
         @confirm="confirmDeletePoi"
         @cancel="showDeleteConfirm = false"
       >
-        <p>Are you sure you want to remove <strong>{{ deletingPoiData?.details?.name }}</strong>?</p>
+        <p>Are you sure you want to remove <strong>{{ deletingPoiData?.name }}</strong>?</p>
       </ConfirmationModal>
 
       <ConfirmationModal
@@ -381,7 +370,7 @@ const movePoi = (poiId, toLayer) => {
         @confirm="confirmRemovePoiTime"
         @cancel="showRemoveTimeConfirm = false"
       >
-        <p>Remove time from <strong>{{ removePoiTimeData?.details?.name }}</strong>?</p>
+        <p>Remove time from <strong>{{ removePoiTimeData?.name }}</strong>?</p>
       </ConfirmationModal>
     </Teleport>
 
@@ -403,7 +392,7 @@ const movePoi = (poiId, toLayer) => {
         :style="{ left: touchDragState.x + 'px', top: touchDragState.y + 'px' }"
       >
         <i class="bi bi-geo-alt-fill text-lg text-gray-500"></i>
-        <span class="text-xs font-bold truncate">{{ touchDragState.poi?.details.name }}</span>
+        <span class="text-xs font-bold truncate">{{ touchDragState.poi?.name }}</span>
       </div>
 
       
@@ -482,10 +471,10 @@ const movePoi = (poiId, toLayer) => {
                 <div class="flex items-center gap-3 select-none">
                   <i 
                     class="bi text-lg" 
-                    :class="getIconClass(poi.icon || poi.details.category)" 
+                    :class="getIconClass(poi.icon || poi.category.toLowerCase())" 
                     :style="{ color: getColorValue(poi.color) }"
                   ></i>
-                  <span class="text-gray-800 font-medium text-sm" :class="poi.must_have ? 'underline' : ''">{{ poi.details.name || `POI ${poi.id}` }}</span>
+                  <span class="text-gray-800 text-sm" :class="poi.must_have ? 'font-bold' : ''">{{ poi.name || `POI ${poi.id}` }}</span>
                 </div>
                 
                 <div 
@@ -551,12 +540,12 @@ const movePoi = (poiId, toLayer) => {
 
                   <i 
                     class="bi text-lg" 
-                    :class="getIconClass(poi.icon || poi.details.category)" 
+                    :class="getIconClass(poi.icon || poi.category.toLowerCase())" 
                     :style="{ color: getColorValue(poi.color) }"
                   ></i>
                   
                   <div class="flex flex-col overflow-hidden">
-                    <span class="text-gray-800 font-medium text-sm truncate" :class="poi.must_have ? 'underline' : ''">{{ poi.details.name || `POI ${poi.id}` }}</span>
+                    <span class="text-gray-800 text-sm truncate" :class="poi.must_have ? 'font-bold' : ''">{{ poi.name || `POI ${poi.id}` }}</span>
                   </div>
                 </div>
 

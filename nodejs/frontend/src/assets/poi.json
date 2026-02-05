@@ -6,7 +6,7 @@
     "city": "New York",
     "country": "USA",
     "val": 4.7,
-    "category": "museum",
+    "category": "Museum",
     "lat": 40.761595199047335,
     "lng": -73.97770648620123
   },
@@ -17,7 +17,7 @@
     "city": "New York",
     "country": "USA",
     "val": 4.8,
-    "category": "museum",
+    "category": "Museum",
     "lat": 40.779509689068654,
     "lng": -73.96315817226959
   },
@@ -28,7 +28,7 @@
     "city": "New York",
     "country": "USA",
     "val": 4.8,
-    "category": "park",
+    "category": "Park",
     "lat": 40.782595700233124,
     "lng": -73.96556753823079
   },
@@ -39,7 +39,7 @@
     "city": "New York",
     "country": "USA",
     "val": 4.5,
-    "category": "food",
+    "category": "Food",
     "lat": 40.72231428318109,
     "lng": -73.98741827412042
   },
@@ -50,7 +50,7 @@
     "city": "Firenze",
     "country": "Italy",
     "val": 4.7,
-    "category": "square",
+    "category": "Square",
     "lat": 41.899187119127475,
     "lng": 12.473070506442824
   },
@@ -61,7 +61,7 @@
     "city": "Firenze",
     "country": "Italy",
     "val": 4.6,
-    "category": "food",
+    "category": "Food",
     "lat": 43.76858274726116,
     "lng": 11.257473282238767
   },
@@ -72,7 +72,7 @@
     "city": "New York",
     "country": "USA",
     "val": 4.8,
-    "category": "park",
+    "category": "Park",
     "lat": 40.748301842094385,
     "lng": -74.00484280536665
   },
@@ -83,7 +83,7 @@
     "city": "Firenze",
     "country": "Italy",
     "val": 4.7,
-    "category": "landmark",
+    "category": "Landmark",
     "lat": 43.76803336572917,
     "lng": 11.25308983804203
   },
@@ -94,7 +94,7 @@
     "city": "New York",
     "country": "USA",
     "val": 4.6,
-    "category": "food",
+    "category": "Food",
     "lat": 40.733784108905816,
     "lng": -73.98775935663701
   },
@@ -105,7 +105,7 @@
     "city": "Firenze",
     "country": "Italy",
     "val": 4.8,
-    "category": "square",
+    "category": "Square",
     "lat": 43.773477206531766,
     "lng": 11.256528639489828
   }

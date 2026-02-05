@@ -1,7 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { getUser } from '../services/userService';
-import { getPOI } from '../services/poiService';
 
 import BadgeCard from '@/components/BadgeCard.vue';
 import country_10 from '@/assets/images/country_10.jpeg';
@@ -14,9 +13,9 @@ const badges = ref([]);
 const user = ref(null);
 onMounted(() => {
   user.value = getUser();
-  const country_number = [...new Set(user.value.maps.flatMap(m => m.saved_poi).map(poi => getPOI(poi.id)).map(poi => poi.country.toLowerCase()))].length;
-  const museum_number = user.value.maps.flatMap(m => m.saved_poi).map(poi => getPOI(poi.id)).filter(poi => poi.category.toLowerCase() === 'museum').length;
-  const parks_number = user.value.maps.flatMap(m => m.saved_poi).map(poi => getPOI(poi.id)).filter(poi => poi.category.toLowerCase() === 'park').length;
+  const country_number = [...new Set(user.value.maps.flatMap(m => m.saved_poi).map(poi => poi.country.toLowerCase()))].length;
+  const museum_number = user.value.maps.flatMap(m => m.saved_poi).filter(poi => poi.category.toLowerCase() === 'museum').length;
+  const parks_number = user.value.maps.flatMap(m => m.saved_poi).filter(poi => poi.category.toLowerCase() === 'park').length;
   const map_number = user.value.maps.length;
 
   badges.value = [

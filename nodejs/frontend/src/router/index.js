@@ -41,8 +41,8 @@ const router = createRouter({
 });
 
 router.beforeEach( async(to, from, next) => {
-    initializeUserStorage();
     initializePoiStorage();
+    initializeUserStorage();
     next();
 });
 
