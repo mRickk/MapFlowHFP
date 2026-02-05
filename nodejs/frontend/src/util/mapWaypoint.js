@@ -1,10 +1,20 @@
-import { getIconClass } from "./colorIcons";
+import { getIconClass, getColorValue } from "./colorIcons";
 
-export const htmlMarkerIcon = (icon = 'geo', color = '#555555', isMustHave = false, size = 12) => {
+export const htmlMarkerIcon = (icon = "pin", color = '#555555', isMustHave = false, isSaved = false, size = 15) => {
+    const mustHaveSize = parseInt(size*1.5);
     return L.divIcon({
-        html: `<div style="background-color: ${color}; width: ${size}px; height: ${size}px; border-radius: 50%; border: 2px solid ${isMustHave ? color : 'white'};"></div>`,
-        className: getIconClass(icon),
-        iconSize: [size, size],
-        iconAnchor: [size / 2, size / 2],
+        html: `<div style="background-color: ${getColorValue(color)}; width: ${isMustHave ? mustHaveSize : size}px; height: ${isMustHave ? mustHaveSize : size}px; border-radius: 50%; border: 2px solid ${isSaved ? getColorValue(color) : 'white'};"></div>`,
+        className: icon == "pin" ? '' : `bi ${getIconClass(icon)}`,
+        iconSize: [size, isMustHave ? mustHaveSize : size],
+        iconAnchor: isMustHave ? [mustHaveSize / 2, mustHaveSize / 2] : [size / 2, size / 2],
     });
 };
+
+export const redMarkerIcon = () => L.icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});

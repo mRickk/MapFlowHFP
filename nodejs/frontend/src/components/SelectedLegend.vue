@@ -50,6 +50,16 @@ const fetchMapData = async (id) => {
   return await getMap(id);
 };
 
+const selectPoi = (id) => {
+  selectedPoiId.value = id;
+  isOpen.value = true;
+};
+
+defineExpose({
+  selectPoi,
+  isOpen
+});
+
 onMounted(async () => {
   if (props.mapId) {
     const data = await fetchMapData(props.mapId);
@@ -129,10 +139,6 @@ const toggleGroup = (key) => {
     ...collapsedGroups.value,
     [key]: !collapsedGroups.value[key]
   };
-};
-
-const selectPoi = (id) => {
-  selectedPoiId.value = selectedPoiId.value === id ? null : id;
 };
 
 const selectLayer = (name) => {

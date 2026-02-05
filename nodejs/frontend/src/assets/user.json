@@ -13,24 +13,18 @@
         {
           "id": 1,
           "datetime": "2024-05-15T10:30:00",
-          "icon": "museum",
-          "color": "red",
           "layer": "Arte e Musica",
           "must_have": true
         },
         {
           "id": 3,
           "datetime": "2024-05-15T16:00:00",
-          "icon": "park",
-          "color": "blue",
           "layer": "Parchi",
           "must_have": true
         },
         {
           "id": 9,
           "datetime": "2024-05-16T13:00:00",
-          "icon": "restaurant",
-          "color": "red",
           "layer": "Dove mangiare",
           "must_have": false
         }
@@ -38,7 +32,7 @@
     },
     {
       "id": 2,
-      "name": "Tour Arte Italia",
+      "name": "Tour Roma",
       "image_url": "https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=300&q=80",
       "starting_date": "2024-06-08",
       "leaving_date": "2024-06-15",
@@ -47,24 +41,18 @@
         {
           "id": 10,
           "datetime": "2024-06-10T09:00:00",
-          "icon": "square",
-          "color": "orange",
           "layer": "Da visitare",
           "must_have": true
         },
         {
           "id": 6,
           "datetime": "2024-06-10T13:30:00",
-          "icon": "restaurant",
-          "color": "red",
           "layer": "Ristoranti",
           "must_have": false
         },
         {
           "id": 5,
           "datetime": "2024-06-12T18:00:00",
-          "icon": "square",
-          "color": "purple",
           "layer": "Da visitare",
           "must_have": true
         }

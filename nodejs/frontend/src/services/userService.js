@@ -179,3 +179,26 @@ export function isPoiSaved(mapId, poiId) {
 
     return map.saved_poi.some(p => p.id === poiId);
 }
+
+export function createPoiInMap(mapId, poiData) {
+    const user = getUser();
+    if (!user) return;
+
+    const map = user.maps.find(m => m.id === mapId);
+    if (!map) return;
+
+    const newId = Date.now();
+
+    const newPoi = {
+        id: newId,
+        ...poiData
+    };
+
+    if (!map.saved_poi) {
+        map.saved_poi = [];
+    }
+
+    map.saved_poi.push(newPoi);
+    saveUser(user);
+    return newPoi;
+}
