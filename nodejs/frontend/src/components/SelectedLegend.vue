@@ -46,15 +46,21 @@ const touchDragState = ref({
 let touchStartX = 0;
 let touchStartY = 0;
 
-const emit = defineEmits(['mapUpdated']);
+const emit = defineEmits(['mapUpdated', 'center-poi']);
 
 const fetchMapData = async (id) => {
   return await getMap(id);
 };
 
 const selectPoi = (id) => {
-  selectedPoiId.value = id;
-  isOpen.value = true;
+  if (selectedPoiId.value === id) {
+    isOpen.value = false;
+    emit('center-poi', id);
+    selectedPoiId.value = null; // Optional: deselect after centering? Or keep selected? "selectedPoiId.value = null" might be better if the legend is closing.
+  } else {
+    selectedPoiId.value = id;
+    isOpen.value = true;
+  }
 };
 
 defineExpose({

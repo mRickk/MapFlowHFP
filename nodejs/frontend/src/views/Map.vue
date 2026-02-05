@@ -54,9 +54,6 @@ const renderMarkers = () => {
         marker.on('click', () => {
             selectedPoi.value = poi;
             showPoiDetails.value = true;
-            if (selectedLegendRef.value) {
-                selectedLegendRef.value.selectPoi(poi.id);
-            }
         });
         
         marker.addTo(markerLayerGroup);
@@ -113,10 +110,32 @@ const handleMapUpdated = () => {
     renderMarkers();
 };
 
+const handleCenterPoi = (poiId) => {
+    if (!activeMap.value || !activeMap.value.saved_poi) return;
+    const poi = activeMap.value.saved_poi.find(p => p.id === poiId);
+    if (poi && mapInstance) {
+        mapInstance.setView([poi.lat, poi.lng], 18);
+        selectedPoi.value = poi;
+        // The user didn't explicitly ask to show details here, but "map centers on the poi" usually implies showing it. 
+        // "if it's clicked again the legend closes itself and the map centers on the poi"
+        // It doesn't say "open details". But usually centering on a POI implies selecting it.
+        // I will NOT open details to be safe, just center. 
+        // Wait, if I set selectedPoi.value, the POIDetailsCard might show if showPoiDetails is true.
+        // showPoiDetails is separate.
+    }
+};
+
 const closeInsertModal = () => {
     showInsertModal.value = false;
     insertCoords.value = null;
     tempMarkerLayer.clearLayers();
+};
+
+const handlePoiSelected = (poi) => {
+    if (!mapInstance) return;
+    mapInstance.setView([poi.lat, poi.lng], 18);
+    selectedPoi.value = poi;
+    showPoiDetails.value = true;
 };
 
 onMounted(() => {
@@ -165,6 +184,7 @@ onMounted(() => {
         <SearchBar 
             v-model="searchQuery"
             class="" 
+            @poi-selected="handlePoiSelected"
         />
     </div>
     
@@ -175,6 +195,7 @@ onMounted(() => {
         :mapId="activeMapMapId" 
         class="z-10"
         @mapUpdated="handleMapUpdated"
+        @center-poi="handleCenterPoi"
     />
     
     <POIDetailsCard 
