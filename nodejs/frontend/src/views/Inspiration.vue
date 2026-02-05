@@ -16,6 +16,8 @@ const isInsertModalOpen = ref(false);
 const insertPoiData = ref({ name: '', icon: 'pin', color: 'red' });
 const showConfirmRemove = ref(false);
 const activeMap = ref(null);
+const isLocationAvailable = ref(false);
+const userLocation = ref(null);
 
 let mapInstance = null;
 let markersLayer = null;
@@ -88,6 +90,32 @@ const confirmRemovePoi = () => {
     
     showConfirmRemove.value = false;
     isVideoModalOpen.value = false;
+};
+
+const handleLocateUser = () => {
+    if (!mapInstance) return;
+
+    if (userLocation.value) {
+         mapInstance.setView(userLocation.value, 18);
+         return;
+    }
+
+    if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const { latitude, longitude } = position.coords;
+                mapInstance.setView([latitude, longitude], 18);
+            },
+            (error) => {
+                console.error("Error getting location", error);
+            },
+           {
+                maximumAge: 10000, 
+                timeout: 5000,
+                enableHighAccuracy: true 
+            }
+        );
+    }
 };
 
 const updateMarkers = () => {
@@ -168,6 +196,7 @@ const initMap = () => {
     });
 
     mapInstance.on('locationfound', (e) => {
+        userLocation.value = e.latlng;
         if (userMarker) {
             userMarker.setLatLng(e.latlng);
         } else {
@@ -189,6 +218,7 @@ watch(() => activeMap.value, () => {
 }, { deep: true });
 
 onMounted(() => {
+    isLocationAvailable.value = "geolocation" in navigator;
     loadMapData();
     if (activeMap.value) {
         initMap();
@@ -197,6 +227,16 @@ onMounted(() => {
 </script>
 
 <template>
+
+    <button 
+        class="fixed right-4 top-1/4 z-50 w-12 h-12 flex items-center justify-center bg-white border border-gray rounded-full shadow-md hover:bg-light transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        @click="handleLocateUser"
+        :disabled="!isLocationAvailable"
+        title="Locate Me"
+    >
+        <i class="bi bi-crosshair text-xl"></i>
+    </button>
+    
     <div id="map" class="absolute inset-0 z-0"></div>
 
     <div v-if="isVideoModalOpen" 

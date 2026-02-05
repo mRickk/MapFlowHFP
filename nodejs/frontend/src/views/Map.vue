@@ -24,6 +24,8 @@ const selectedPoi = ref(null);
 const insertCoords = ref(null);
 const insertPoiData = ref({ name: '', icon: 'pin', color: 'red' });
 const searchQuery = ref('');
+const isLocationAvailable = ref(false);
+const userLocation = ref(null);
 
 const availableLayers = computed(() => {
     if (!activeMap.value || !activeMap.value.saved_poi) return [];
@@ -165,7 +167,34 @@ const handlePoiSelected = (poi) => {
     showPoiDetails.value = true;
 };
 
+const handleLocateUser = () => {
+    if (!mapInstance) return;
+
+    if (userLocation.value) {
+         mapInstance.setView(userLocation.value, 18);
+         return;
+    }
+
+    if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const { latitude, longitude } = position.coords;
+                mapInstance.setView([latitude, longitude], 18);
+            },
+            (error) => {
+                console.error("Error getting location", error);
+            },
+            {
+                maximumAge: 10000, 
+                timeout: 5000,
+                enableHighAccuracy: true 
+            }
+        );
+    }
+};
+
 onMounted(() => {
+    isLocationAvailable.value = "geolocation" in navigator;
     loadMapData();
     
     mapInstance = L.map('map', {
@@ -207,6 +236,7 @@ onMounted(() => {
     });
 
     mapInstance.on('locationfound', (e) => {
+        userLocation.value = e.latlng;
         if (userMarker) {
             userMarker.setLatLng(e.latlng);
         } else {
@@ -257,6 +287,15 @@ onMounted(() => {
         @center-poi="handleCenterPoi"
     />
     
+    <button 
+        class="fixed right-4 top-1/4 z-50 w-12 h-12 flex items-center justify-center bg-white border border-gray rounded-full shadow-md hover:bg-light transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        @click="handleLocateUser"
+        :disabled="!isLocationAvailable"
+        title="Locate Me"
+    >
+        <i class="bi bi-crosshair text-xl"></i>
+    </button>
+
     <POIDetailsCard 
         :visible="showPoiDetails"
         :poi="selectedPoi"
