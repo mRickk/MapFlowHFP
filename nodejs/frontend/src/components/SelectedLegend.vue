@@ -46,6 +46,8 @@ const touchDragState = ref({
 let touchStartX = 0;
 let touchStartY = 0;
 
+const emit = defineEmits(['mapUpdated']);
+
 const fetchMapData = async (id) => {
   return await getMap(id);
 };
@@ -180,6 +182,7 @@ const saveLayer = (newData) => {
     }
   });
 
+  emit('mapUpdated');
   showLayerEdit.value = false;
 };
 
@@ -198,6 +201,7 @@ const savePoi = (newData) => {
       poi.must_have = newData.mustHave;
       
       updatePoiInMap(props.mapId, poi); 
+      emit('mapUpdated');
     }
   }
 };
@@ -213,6 +217,7 @@ const saveTimeline = (newDateTime) => {
     if (poi) {
       poi.datetime = newDateTime;
       updatePoiInMap(props.mapId, poi);
+      emit('mapUpdated');
     }
   }
 };
@@ -234,6 +239,7 @@ const confirmDeletePoi = () => {
     if (idx !== -1) {
       mapData.value.saved_poi.splice(idx, 1);
       removePoiFromMap(props.mapId, deletingPoiData.value.id);
+      emit('mapUpdated');
     }
     showDeleteConfirm.value = false;
     deletingPoiData.value = null;
@@ -246,6 +252,7 @@ const confirmRemovePoiTime = () => {
     if (idx !== -1) {
       mapData.value.saved_poi[idx].datetime = null;
       updatePoiInMap(props.mapId, mapData.value.saved_poi[idx]);
+      emit('mapUpdated');
     }
     showRemoveTimeConfirm.value = false;
     removePoiTimeData.value = null;

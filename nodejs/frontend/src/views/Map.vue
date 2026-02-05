@@ -59,7 +59,7 @@ const renderMarkers = () => {
 
     const allPois = getPOIs();
     allPois.forEach(poi => {
-        if (activeMap.value.saved_poi.find(p => p.id === poi.id)) return; // Skip if already rendered
+        if (activeMap.value.saved_poi.find(p => p.id === poi.id)) return; // Skip
     
         const icon = htmlMarkerIcon(poi.icon || "pin", poi.color || "blue", false, false);
         const marker = L.marker([poi.lat, poi.lng], { icon });
@@ -67,6 +67,7 @@ const renderMarkers = () => {
         marker.on('click', () => {
             insertCoords.value = { lat: poi.lat, lng: poi.lng };
             insertPoiData.value = {
+                id: poi.id,
                 name: poi.name,
                 icon: poi.icon || 'pin',
                 color: poi.color || 'blue'
@@ -81,16 +82,27 @@ const renderMarkers = () => {
 const handleCreatePoi = (poiData) => {
     if (!insertCoords.value || !activeMap.value) return;
 
-    createPoiInMap(activeMap.value.id, {
+    const payload = {
         ...poiData,
         lat: insertCoords.value.lat,
         lng: insertCoords.value.lng
-    });
+    };
+
+    if (insertPoiData.value && insertPoiData.value.id) {
+        payload.id = insertPoiData.value.id;
+    }
+
+    createPoiInMap(activeMap.value.id, payload);
 
     closeInsertModal();
     loadMapData();
     renderMarkers();
     legendKey.value++;
+};
+
+const handleMapUpdated = () => {
+    loadMapData();
+    renderMarkers();
 };
 
 const closeInsertModal = () => {
@@ -154,6 +166,7 @@ onMounted(() => {
         ref="selectedLegendRef"
         :mapId="activeMapMapId" 
         class="z-10"
+        @mapUpdated="handleMapUpdated"
     />
     
     <InsertPOIModal

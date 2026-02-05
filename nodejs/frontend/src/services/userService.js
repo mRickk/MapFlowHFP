@@ -187,18 +187,25 @@ export function createPoiInMap(mapId, poiData) {
     const map = user.maps.find(m => m.id === mapId);
     if (!map) return;
 
-    const newId = Date.now();
+    const newId = poiData.id || Date.now();
 
     const newPoi = {
-        id: newId,
-        ...poiData
+        ...poiData,
+        id: newId
     };
 
     if (!map.saved_poi) {
         map.saved_poi = [];
     }
 
-    map.saved_poi.push(newPoi);
+    const existingIndex = map.saved_poi.findIndex(p => p.id === newId);
+    if (existingIndex !== -1) {
+        console.warn("POI with this ID already exists in map, updating instead.");
+        map.saved_poi[existingIndex] = { ...map.saved_poi[existingIndex], ...newPoi };
+    } else {
+        map.saved_poi.push(newPoi);
+    }
+    
     saveUser(user);
     return newPoi;
 }
