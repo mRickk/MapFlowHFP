@@ -7,7 +7,7 @@ import ConfirmationModal from '@/components/ConfirmationModal.vue';
 import { temporaryMarkerIcon, htmlMarkerIcon, minZoomForLabels, userIcon } from '@/util/mapWaypoint';
 import { onMounted, ref, watch, computed } from 'vue';
 import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
+import 'leaflet-routing-machine';
 import { getUser, createPoiInMap, removePoiFromMap } from '@/services/userService';
 import { getPOIs } from '@/services/poiService';
 
@@ -215,6 +215,45 @@ onMounted(() => {
     markerLayerGroup.addTo(mapInstance);
     tempMarkerLayer.addTo(mapInstance);
 
+    const startPoi = activeMap.value.saved_poi[0];
+    const endPoi = activeMap.value.saved_poi[1];
+
+    const routingWaypoints = [
+      L.latLng(startPoi.lat, startPoi.lng),
+      L.latLng(endPoi.lat, endPoi.lng)
+    ];
+
+    var control = L.Routing.control({
+      waypoints: routingWaypoints,
+      hints: {
+        locations: []
+      },
+      router: L.Routing.osrmv1({
+        serviceUrl: 'https://router.project-osrm.org/route/v1',
+        profile: 'routed-bike',
+        timeout: 300000,
+      }),
+      show: false,
+      addWaypoints: false,
+      fitSelectedRoutes: false,
+      createMarker: function() { return null; },
+      lineOptions: {
+        styles: [{color: 'green', opacity: 0.8, weight: 6, dashArray: '10, 10'}]
+      }
+    }).addTo(mapInstance);
+
+    control.on('routesfound', function(e) {
+      const routes = e.routes;
+      const summary = routes[0].summary;
+
+      const timeInMinutes = Math.round(summary.totalTime / 60);
+
+      const distanceInKm = (summary.totalDistance / 1000).toFixed(2);
+
+      console.log('Tempo stimato: ' + timeInMinutes + ' minuti');
+      console.log('Distanza: ' + distanceInKm + ' km');
+    });
+
     const updateLabelsVisibility = () => {
         const mapEl = document.getElementById('map');
         if (!mapEl) return;
@@ -341,5 +380,9 @@ html, body, #app {
 
 .show-marker-labels .marker-label {
     display: block !important;
+}
+
+.leaflet-routing-container {
+  display: none !important;
 }
 </style>
