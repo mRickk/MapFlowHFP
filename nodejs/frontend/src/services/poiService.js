@@ -13,13 +13,3 @@ export function getPOI(POIId) {
     const pois = getPOIs() || [];
     return pois.find(poi => poi.id === POIId) || null;
 }
-
-export function deletePoi(poiId) {
-    const pois = getPOIs() || [];
-    const updatedPois = pois.filter(p => p.id !== poiId);
-
-    if (pois.length !== updatedPois.length) {
-        setItem(StorageKeys.POI, updatedPois);
-        return;
-    }
-}
