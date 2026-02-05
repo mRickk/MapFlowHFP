@@ -4,7 +4,7 @@ import InsertPOIModal from '@/components/InsertPOIModal.vue';
 import POIDetailsCard from '@/components/POIDetailsCard.vue';
 import SearchBar from '@/components/SearchBar.vue';
 import ConfirmationModal from '@/components/ConfirmationModal.vue';
-import { temporaryMarkerIcon, htmlMarkerIcon } from '@/util/mapWaypoint';
+import { temporaryMarkerIcon, htmlMarkerIcon, userIcon } from '@/util/mapWaypoint';
 import { onMounted, ref, watch, computed } from 'vue';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -185,6 +185,26 @@ onMounted(() => {
 
     markerLayerGroup.addTo(mapInstance);
     tempMarkerLayer.addTo(mapInstance);
+
+    let userMarker = null;
+
+    mapInstance.locate({ 
+        setView: false,
+        watch: true,
+        enableHighAccuracy: true 
+    });
+
+    mapInstance.on('locationfound', (e) => {
+        if (userMarker) {
+            userMarker.setLatLng(e.latlng);
+        } else {
+            userMarker = L.marker(e.latlng, { icon: userIcon, zIndexOffset: 1000 }).addTo(mapInstance);
+        }
+    });
+
+    mapInstance.on('locationerror', (e) => {
+        console.warn("Posizione non trovata:", e.message);
+    });
 
     mapInstance.on('contextmenu', (e) => {
         tempMarkerLayer.clearLayers();

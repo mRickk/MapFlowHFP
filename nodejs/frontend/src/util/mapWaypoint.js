@@ -91,3 +91,16 @@ export const temporaryMarkerIcon = () => L.icon({
   popupAnchor: [1, -34],
   shadowSize: [41, 41]
 });
+
+export const userIcon = L.divIcon({
+    className: '!bg-transparent !border-0', 
+    html: `
+        <div class="relative flex items-center justify-center w-full h-full">
+            <span class="absolute inline-flex w-full h-full rounded-full opacity-75 animate-ping bg-blue-400"></span>
+            
+            <span class="relative inline-flex w-4 h-4 bg-blue-500 border-2 border-white rounded-full shadow-sm"></span>
+        </div>
+    `,
+    iconSize: [32, 32],
+    iconAnchor: [16, 16]
+});

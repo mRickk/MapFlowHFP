@@ -5,7 +5,7 @@ import 'leaflet/dist/leaflet.css';
 
 import { getUser, createPoiInMap, removePoiFromMap } from '@/services/userService';
 import { getPOIs } from '@/services/poiService';
-import { bubbleIcon, htmlMarkerIcon } from '@/util/mapWaypoint';
+import { bubbleIcon, htmlMarkerIcon, userIcon } from '@/util/mapWaypoint';
 import PoiInfoComponent from '../components/PoiInfoComponent.vue';
 import InsertPOIModal from '@/components/InsertPOIModal.vue';
 import ConfirmationModal from '@/components/ConfirmationModal.vue';
@@ -135,6 +135,25 @@ const initMap = () => {
     markersLayer = L.layerGroup().addTo(mapInstance);
     
     updateMarkers();
+
+    let userMarker = null;
+    mapInstance.locate({ 
+        setView: false, 
+        watch: true,    
+        enableHighAccuracy: true 
+    });
+
+    mapInstance.on('locationfound', (e) => {
+        if (userMarker) {
+            userMarker.setLatLng(e.latlng);
+        } else {
+            userMarker = L.marker(e.latlng, { icon: userIcon, zIndexOffset: 1000 }).addTo(mapInstance);
+        }
+    });
+
+    mapInstance.on('locationerror', (e) => {
+        console.warn("Posizione non trovata:", e.message);
+    });
     
     setTimeout(() => {
         mapInstance.invalidateSize();
