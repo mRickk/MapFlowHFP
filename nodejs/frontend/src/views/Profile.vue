@@ -18,11 +18,6 @@ onMounted(() => {
   const museum_number = user.value.maps.flatMap(m => m.saved_poi).filter(poi => poi.category && poi.category.toLowerCase() === 'museum').length;
   const parks_number = user.value.maps.flatMap(m => m.saved_poi).filter(poi => poi.category && poi.category.toLowerCase() === 'park').length;
   const map_number = user.value.maps.length;
-  const poi_selected_ids = [...new Set(user.value.maps.flatMap(m => m.saved_poi).map(saved => saved.id))];
-
-  const country_number = [...new Set(poi_selected_ids.map(id => getPOI(id).country.toLowerCase()))].length;
-  const museum_number = poi_selected_ids.map(id => getPOI(id)).filter(poi => poi.category.toLowerCase() === 'museum').length;
-  const parks_number = poi_selected_ids.map(id => getPOI(id)).filter(poi => poi.category.toLowerCase() === 'park').length;
   
   badges.value = [
     { image: country_10, val: country_number, total: 10 },
