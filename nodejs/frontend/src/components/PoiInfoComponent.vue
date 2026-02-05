@@ -1,41 +1,17 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { getUser, removePoiFromMap } from '@/services/userService';
-
 const props = defineProps({
   data: { type: Object, required: true },
-  onAdd: { type: Function, default: () => {} },
-  onRemove: { type: Function, default: () => {} },
-  onClose: { type: Function, default: () => {} }
+  isSaved: { type: Boolean, default: false }
 });
 
-const isAdded = ref(false);
-const savedPoisId = ref([]);
-
-const refreshData = () => {
-  const user = getUser();
-  const selectedMap = user.maps.find(m => m.selected);
-  if (selectedMap) {
-    savedPoisId.value = selectedMap.saved_poi.map(poi => poi.id);
-    isAdded.value = savedPoisId.value.includes(props.data.id);
-  }
-};
-
-onMounted(() => {
-  refreshData();
-});
+const emit = defineEmits(['add', 'remove', 'close']);
 
 const toggleAdd = () => {
-  const user = getUser();
-  const selectedMap = user.maps.find(m => m.selected);
-
-  if (isAdded.value) {
-    removePoiFromMap(selectedMap.id, props.data.id);
-    props.onRemove();
+  if (props.isSaved) {
+    emit('remove', props.data);
   } else {
-    props.onAdd();
+    emit('add', props.data);
   }
-  refreshData();
 };
 </script>
 
@@ -60,23 +36,23 @@ const toggleAdd = () => {
         <button 
           @click="toggleAdd" 
           class="cursor-pointer transition-transform active:scale-95 focus:outline-none"
-          :title="isAdded ? 'Rimuovi' : 'Aggiungi'"
+          :title="isSaved ? 'Rimuovi' : 'Aggiungi'"
         >
-          <svg v-if="isAdded" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-dash-circle-fill text-red" viewBox="0 0 16 16">
+          <svg v-if="isSaved" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-dash-circle-fill text-red" viewBox="0 0 16 16">
             <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1z"/>
           </svg>
 
-          <svg v-else xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-plus-circle-fill text-bright hover:text-brighter transition-colors" viewBox="0 0 16 16">
+          <svg v-else xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-plus-circle-fill text-green transition-colors" viewBox="0 0 16 16">
             <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
           </svg>
         </button>
 
         <button 
-          @click="onClose"
-          class="bg-white border border-lesslight rounded-full p-1 text-darkgray hover:text-red shadow-sm transition-colors cursor-pointer"
+          @click="$emit('close')"
+          class="bg-bright border border-lesslight rounded-full p-1 text-darkgray hover:text-red shadow-sm transition-colors cursor-pointer"
           title="Chiudi"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
             <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
           </svg>
         </button>

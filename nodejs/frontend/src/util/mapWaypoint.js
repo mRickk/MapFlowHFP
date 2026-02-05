@@ -23,13 +23,13 @@ export const htmlMarkerIcon = (icon = "pin", color = '#555555', isMustHave = fal
             left: ${pinSize + 8}px;
             top: 50%;
             transform: translateY(-50%);
-            background-color: #fffaf6;
+            background-color: ${isSaved ? cVal : 'white'};
             ${isMustHave ? 'border: 2px solid #1d1b1c;' : ''}
             padding: 2px 6px;
             border-radius: 4px;
             font-weight: bold;
             font-size: 14px;
-            color: ${cVal};
+            color: ${isSaved ? 'white' : cVal};
             white-space: nowrap;
             box-shadow: 0 1px 3px rgba(0,0,0,0.3);
             z-index: 10;
@@ -81,10 +81,15 @@ export const htmlMarkerIcon = (icon = "pin", color = '#555555', isMustHave = fal
     });
 };
 
-export const bubbleIcon = (size = 12, name = null) => {
-    const pixelSize = size * 4;
+export const bubbleIcon = (name = null, selected = false) => {
+    const pixelSize = 48;
     const textColor = '#333333';
-
+    let bubbleColor = "bg-bright";
+    let iconColor = "text-white";
+    if (!selected) {
+        bubbleColor = "bg-white border border-bright"
+        iconColor = "text-bright"
+    }
     const labelHtml = name ? `
         <div class="marker-label" style="
             display: none;
@@ -92,7 +97,7 @@ export const bubbleIcon = (size = 12, name = null) => {
             left: ${pixelSize + 5}px;
             top: 50%;
             transform: translateY(-50%);
-            background-color: #ffcdba;
+            background-color: ${selected ? '#ffcdba' : '#fffaf6'};
             padding: 2px 6px;
             border-radius: 4px;
             font-weight: bold;
@@ -102,24 +107,23 @@ export const bubbleIcon = (size = 12, name = null) => {
             box-shadow: 0 1px 3px rgba(0,0,0,0.3);
             z-index: 10;
         ">
-            ${name}
+            ${name ? name : 'Video'}
         </div>
     ` : '';
 
     return L.divIcon({
         html: `
-            <div style="position: relative; width: ${pixelSize}px; height: ${pixelSize}px;">
-                <div class="relative flex items-center justify-center bg-brighter shadow-lg" 
-                     style="width: 100%; height: 100%; 
-                            border-radius: 50% 50% 50% 0; 
-                            transform: rotate(-45deg);">
-                    
-                    <i class="bi bi-file-play-fill text-white flex items-center justify-center" 
-                       style="transform: rotate(45deg); font-size: ${pixelSize / 2}px;">
-                    </i>
-                </div>
-                ${labelHtml}
-            </div>`,
+            <div class="relative flex items-center justify-center ${bubbleColor} shadow-lg" 
+                 style="width: ${pixelSize}px; height: ${pixelSize}px; 
+                        border-radius: 50% 50% 50% 0; 
+                        transform: rotate(-45deg);">
+                
+                <i class="bi bi-file-play-fill ${iconColor} flex items-center justify-center" 
+                   style="transform: rotate(45deg); font-size: ${pixelSize / 2}px;">
+                </i>
+            </div>
+            ${labelHtml}
+            `,
         className: '',
         iconSize: [pixelSize, pixelSize],
         iconAnchor: [0, pixelSize], 
@@ -136,3 +140,16 @@ export const temporaryMarkerIcon = () => L.icon({
 });
 
 export const minZoomForLabels = 14;
+
+export const userIcon = L.divIcon({
+    className: '!bg-transparent !border-0', 
+    html: `
+        <div class="relative flex items-center justify-center w-full h-full">
+            <span class="absolute inline-flex w-full h-full rounded-full opacity-75 animate-ping bg-blue-400"></span>
+            
+            <span class="relative inline-flex w-4 h-4 bg-blue-500 border-2 border-white rounded-full shadow-sm"></span>
+        </div>
+    `,
+    iconSize: [32, 32],
+    iconAnchor: [16, 16]
+});

@@ -11,12 +11,13 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  
-  onAdd: { type: Function, default: () => {} },
-  onRemove: { type: Function, default: () => {} }
+  isSaved: {
+    type: Boolean,
+    default: false
+  }
 });
 
-const emit = defineEmits(['close']);
+const emit = defineEmits(['close', 'add', 'remove']);
 
 const cardHeight = ref(350);
 const isDragging = ref(false);
@@ -87,10 +88,11 @@ const endDrag = () => {
         <div class="flex-1 overflow-y-auto pb-6 space-y-6">
             <PoiInfoComponent 
                 v-if="poi" 
-                :data="poi" 
-                :onAdd="onAdd"
-                :onRemove="onRemove"
-                :onClose="() => emit('close')" 
+                :data="poi"
+                :isSaved="isSaved"
+                @add="(p) => emit('add', p)"
+                @remove="(p) => emit('remove', p)"
+                @close="() => emit('close')" 
             />
 
             <div v-if="poi && poi.images_url && poi.images_url.length > 0" class="flex flex-col gap-4 px-2">
