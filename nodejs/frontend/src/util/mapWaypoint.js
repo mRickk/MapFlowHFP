@@ -10,6 +10,26 @@ export const htmlMarkerIcon = (icon = "pin", color = '#555555', isMustHave = fal
     });
 };
 
+export const bubbleIcon = (size = 12) => {
+    const pixelSize = size * 4;
+
+    return L.divIcon({
+        html: `
+            <div class="relative flex items-center justify-center bg-bright shadow-lg" 
+                 style="width: ${pixelSize}px; height: ${pixelSize}px; 
+                        border-radius: 50% 50% 50% 0; 
+                        transform: rotate(-45deg);">
+                
+                <i class="bi bi-file-play text-white flex items-center justify-center" 
+                   style="transform: rotate(45deg); font-size: ${pixelSize / 2}px;">
+                </i>
+            </div>`,
+        className: '',
+        iconSize: [pixelSize, pixelSize],
+        iconAnchor: [0, pixelSize], 
+    });
+};
+
 export const redMarkerIcon = () => L.icon({
   iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',

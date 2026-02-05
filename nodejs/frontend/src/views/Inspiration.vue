@@ -4,57 +4,62 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 import { getUser } from '@/services/userService';
+import { getPOIs } from '@/services/poiService';
 import SelectedLegend from '@/components/SelectedLegend.vue';
 import SearchBar from '@/components/SearchBar.vue';
+import { bubbleIcon } from '@/util/mapWaypoint'
+import PoiInformationComponent from '@/components/PoiInformationComponent.vue';
 
 const searchQuery = ref('');
+const selectedPoi = ref(null);
+const isModalOpen = ref(false);
 
-const redIcon = L.icon({
-  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41]
-});
-
-const htmlIcon = L.divIcon({
-    html: '<div style="background-color: #3b82f6; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white;"></div>',
-    className: 'bi-bank2',
-    iconSize: [12, 12],
-    iconAnchor: [6, 6]
-});
+function apriModaleVideo(poi) {
+    selectedPoi.value = poi;
+    isModalOpen.value = true;
+}
 
 let mapInstance = null;
-const waypoints = [];
 
-const addWaypoint = (lat, lng, title = "Waypoint", customIcon = null) => {
-    const options = customIcon ? { icon: customIcon } : {};
-    const marker = L.marker([lat, lng], options).addTo(mapInstance);
-    marker.bindPopup(title);
+const addWaypoint = (p, customIcon = null) => {
+    const marker = L.marker([p.lat, p.lng], { icon: customIcon }).addTo(mapInstance);
+
+    marker.on('click', () => {
+        apriModaleVideo(p);
+    });
     return marker;
 };
 
 onMounted(() => {
+    const pois = getPOIs().filter(poi => poi.video_url);
+    const bounds = L.latLngBounds(pois.map(poi => [poi.lat, poi.lng]));
+    
     mapInstance = L.map('map', {
         zoomControl: false
-    }).setView([41.9028, 12.4964], 6);
+    });
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap'
     }).addTo(mapInstance);
 
-    mapInstance.on('click', (e) => {
-        addWaypoint(e.latlng.lat, e.latlng.lng, "Punto Utente", redIcon);
-    });
+    mapInstance.fitBounds(bounds, { padding: [50, 50] });
 
-    addWaypoint(41.8902, 12.4922, "Capitale", htmlIcon);
-    addWaypoint(45.4642, 9.1900, "Nodo Tecnico", htmlIcon);
+    pois.forEach(p => {
+        addWaypoint(p, bubbleIcon());
+    });
 
     setTimeout(() => {
         mapInstance.invalidateSize();
     }, 100);
 });
+
+const getInstagramEmbedUrl = (url) => {
+    if (!url) return '';
+    let cleanUrl = url.split('?')[0].replace(/\/$/, '');
+    cleanUrl = `${cleanUrl}/embed/captioned/`;
+    
+    return cleanUrl;
+};
 </script>
 
 <template>
@@ -66,6 +71,26 @@ onMounted(() => {
     </div>
     <SelectedLegend :mapId="getUser().maps.find(map => map.selected).id" class="z-10"/>
     <div id="map" class="absolute inset-0 z-0"></div>
+
+    <div v-if="isModalOpen" 
+     class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 transition-opacity"
+     @click.self="isModalOpen = false">
+    
+        <div class="relative bg-white border border-lesslight rounded-lg overflow-hidden w-full max-w-[450px] h-[800px] max-h-[90vh] flex flex-col">
+            <PoiInformationComponent :data="selectedPoi" :onClose="() => { isModalOpen = false }" />
+
+            <div class="flex-1 bg-gray-50 flex items-center justify-center overflow-hidden">
+                <iframe 
+                    :src="getInstagramEmbedUrl(selectedPoi?.video_url)"
+                    class="w-full h-full border-0"
+                    allowtransparency="true"
+                    allowfullscreen="true"
+                    frameborder="0"
+                    scrolling="no">
+                </iframe>
+            </div>
+        </div>
+    </div>
 </template>
 
 <style>
