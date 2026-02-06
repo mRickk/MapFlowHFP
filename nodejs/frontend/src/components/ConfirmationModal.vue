@@ -9,14 +9,14 @@
       <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
         <button
           @click="$emit('cancel')"
-          class="w-full sm:w-auto px-6 py-2 rounded font-medium bg-bright text-white shadow-sm hover:bg-brighter transition-colors"
+          class="w-full sm:w-auto px-6 py-2 rounded font-semibold bg-brighter text-white shadow-sm hover:bg-brighter transition-colors"
         >
           Cancel
         </button>
 
         <button
           @click="$emit('confirm')"
-          class="w-full sm:w-auto px-6 py-2 rounded font-medium border-2 border-dark text-dark hover:bg-dark hover:text-white transition-colors"
+          class="w-full sm:w-auto px-6 py-2 rounded font-semibold border-2 border-dark text-dark hover:bg-dark hover:text-white transition-colors"
         >
           Confirm
         </button>

@@ -38,7 +38,7 @@ onMounted(() => {
       <p v-if="user" class="text-gray text-sm">{{user.first_name}} {{user.last_name}}</p>
     </header>
 
-    <section class="p-6 md:p-8">
+    <section class="p-6 md:p-8 pb-24">
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 justify-items-center">
         
         <BadgeCard 

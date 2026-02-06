@@ -140,7 +140,7 @@ onUnmounted(() => {
         />
     </header>
 
-    <section class="p-8 pt-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 justify-items-center md:justify-items-start">
+    <section class="p-8 pt-4 pb-24 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 justify-items-center md:justify-items-start">
       <MapCard
           v-for="map in filteredMaps"
           :key="map.id"
@@ -256,7 +256,7 @@ onUnmounted(() => {
               </button>
               <button 
                 type="submit"
-                class="px-6 py-2 bg-bright text-white text-sm font-bold rounded-lg shadow-md hover:bg-bright/90 hover:-translate-y-0.5 transition-all duration-200"
+                class="px-6 py-2 bg-brighter text-white text-sm font-bold rounded-lg shadow-md hover:bg-bright/90 hover:-translate-y-0.5 transition-all duration-200"
               >
                 {{ isEditing ? 'Update Map' : 'Create Map' }}
               </button>
