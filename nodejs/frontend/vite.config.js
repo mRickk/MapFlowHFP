@@ -2,11 +2,13 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import path from 'path'
 import tailwindcss from '@tailwindcss/vite'
+import basicSsl from '@vitejs/plugin-basic-ssl'
 
 export default defineConfig({
     plugins: [
         vue(),
         tailwindcss(),
+        basicSsl(),
       ],
     resolve: {
         alias: {

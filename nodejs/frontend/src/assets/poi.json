@@ -1,0 +1,353 @@
+[
+  {
+    "id": 1,
+    "name": "MoMA",
+    "address": "11 W 53rd St",
+    "city": "New York",
+    "country": "USA",
+    "val": 4.7,
+    "category": "Museum",
+    "icon": "museum",
+    "color": "blue",
+    "lat": 40.761595199047335,
+    "lng": -73.97770648620123,
+    "images_url": [
+      "https://images.unsplash.com/photo-1576531946810-5b358dc8d545?q=80&w=1176&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1647794135618-b06e7a11d1ab?q=80&w=1631&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://plus.unsplash.com/premium_photo-1706541692268-043f6590be29?q=80&w=1632&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ]
+  },
+  {
+    "id": 2,
+    "name": "The Met",
+    "address": "1000 5th Ave",
+    "city": "New York",
+    "country": "USA",
+    "val": 4.8,
+    "category": "Museum",
+    "icon": "museum",
+    "color": "blue",
+    "lat": 40.779509689068654,
+    "lng": -73.96315817226959,
+    "images_url": [
+      "https://images.unsplash.com/photo-1665399319491-e3f198e8e60a?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://plus.unsplash.com/premium_photo-1706548911842-7162d4bd2c98?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1499426600726-a950358acf16?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Central Park",
+    "address": "110 W 59th St",
+    "city": "New York",
+    "country": "USA",
+    "val": 4.8,
+    "category": "Park",
+    "icon": "park",
+    "color": "green",
+    "lat": 40.782595700233124,
+    "lng": -73.96556753823079,
+    "images_url": [
+      "https://images.unsplash.com/photo-1568515387631-8b650bbcdb90?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://plus.unsplash.com/premium_photo-1697729862026-8f486fcd7f8b?q=80&w=1547&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1605540827677-693bad36b91f?q=80&w=1176&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Katz's Delicatessen",
+    "address": "205 E Houston St",
+    "city": "New York",
+    "country": "USA",
+    "val": 4.5,
+    "category": "Food",
+    "icon": "restaurant",
+    "color": "red",
+    "lat": 40.72231428318109,
+    "lng": -73.98741827412042,
+    "images_url": [
+      "https://images.unsplash.com/photo-1710013371505-ce84c3fadc74?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://plus.unsplash.com/premium_photo-1669687759566-e07cf4e03e26?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Musei Capitolini",
+    "address": "Piazza del Campidoglio, 1",
+    "city": "Rome",
+    "country": "Italy",
+    "val": 4.7,
+    "category": "Museum",
+    "icon": "museum",
+    "color": "blue",
+    "lat": 41.89332106410822, 
+    "lng": 12.48250893220416,
+    "images_url": [
+      "https://plus.unsplash.com/premium_photo-1716563933168-be559919ca24?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1732660647784-1c18484dc30f?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ]
+  },
+  {
+    "id": 6,
+    "name": "Supplì Roma",
+    "address": "Via di S. Francesco a Ripa, 137",
+    "city": "Rome",
+    "country": "Italy",
+    "val": 4.6,
+    "category": "Food",
+    "icon": "restaurant",
+    "color": "red",
+    "lat": 41.88728235356285,
+    "lng": 12.471649036871435,
+    "images_url": [
+      "https://images.unsplash.com/photo-1569230516306-5a8cb5586399?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ]
+  },
+  {
+    "id": 7,
+    "name": "High Line",
+    "address": "Gansevoort Street",
+    "city": "New York",
+    "country": "USA",
+    "val": 4.8,
+    "category": "Park",
+    "icon": "park",
+    "color": "green",
+    "lat": 40.748301842094385,
+    "lng": -74.00484280536665,
+    "images_url": [
+      "https://images.unsplash.com/photo-1624553348093-ed95c718f37b?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1593563754298-e5449dddf84b?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ]
+  },
+  {
+    "id": 8,
+    "name": "Foro Romano",
+    "address": "Foro Romano",
+    "city": "Rome",
+    "country": "Italy",
+    "val": 4.8,
+    "category": "Landmark",
+    "icon": "camera",
+    "color": "orange",
+    "lat": 41.89226627588233,
+    "lng": 12.486416339416875,
+    "images_url": [
+      "https://plus.unsplash.com/premium_photo-1706464965798-336f113c677a?q=80&w=1632&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D0",
+      "https://images.unsplash.com/photo-1643759435882-29d5f3674c54?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1567946454428-4b87b55b2cd2?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ]
+  },
+  {
+    "id": 9,
+    "name": "Joe's Pizza",
+    "address": "150 E 14th St",
+    "city": "New York",
+    "country": "USA",
+    "val": 4.6,
+    "category": "Food",
+    "icon": "restaurant",
+    "color": "red",
+    "lat": 40.733784108905816,
+    "lng": -73.98775935663701,
+    "images_url": [
+       "https://images.unsplash.com/photo-1733956637803-ac8bf7da3112?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+       "https://images.unsplash.com/photo-1563405614298-56f55a71e7ec?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+       "https://images.unsplash.com/photo-1692013274970-11ee5bb916e2?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ]
+  },
+  {
+    "id": 10,
+    "name": "Fontana di Trevi",
+    "address": "Piazza di Trevi",
+    "city": "Rome",
+    "country": "Italy",
+    "val": 4.7,
+    "category": "Landmark",
+    "icon": "camera",
+    "color": "orange",
+    "lat": 41.901277731256364,
+    "lng": 12.48329946692265,
+    "images_url": [
+      "https://plus.unsplash.com/premium_photo-1661962915628-cb4f8dddcca5?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1525874684015-58379d421a52?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1584999872814-569a6b02a2b4?q=80&w=627&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ]
+  },
+  {
+    "id": 11,
+    "name": "Colosseum",
+    "address": "Piazza del Colosseo, 1",
+    "city": "Rome",
+    "country": "Italy",
+    "val": 4.8,
+    "category": "Landmark",
+    "icon": "camera",
+    "color": "orange",
+    "lat": 41.890235535985525,
+    "lng": 12.492230143670573,
+    "video_url": "https://www.instagram.com/p/DRXeuqwDOW0/",
+    "images_url":[
+      "https://plus.unsplash.com/premium_photo-1661962723801-1015e61ec340?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1542650408-a8a15a3712ea?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1722653972958-7ffc04279e38?q=80&w=627&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1657416308836-912d14626700?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ]
+  },
+  {
+    "id": 12,
+    "name": "Fratelli TRECCA",
+    "address": "Via dei Cerchi, 55",
+    "city": "Rome",
+    "country": "Italy",
+    "val": 4.2,
+    "category": "Bakery",
+    "icon": "restaurant",
+    "color": "red",
+    "lat": 41.88821276977888,
+    "lng": 12.483612170458812,
+    "video_url": "https://www.instagram.com/p/DUQW_K6CGeP/",
+    "images_url": [
+      "https://images.unsplash.com/photo-1645649730712-dcde930ab23b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ]
+  },
+  {
+    "id": 13,
+    "name": "Vico Pizza&Wine Roma",
+    "address": "Piazza Rondanini, 47",
+    "city": "Rome",
+    "country": "Italy",
+    "val": 4.5,
+    "category": "Restaurant",
+    "icon": "restaurant",
+    "color": "red",
+    "lat": 41.89984789214533,
+    "lng": 12.47599296441766,
+    "video_url": "https://www.instagram.com/p/DJryidCI1tr/",
+    "images_url": [
+      "https://images.unsplash.com/photo-1688966601036-de12f819576e?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ]  },
+  {
+    "id": 14,
+    "name": "Clorofilla Cucina & Distillati",
+    "address": "Vicolo delle Grotte, 17",
+    "city": "Rome",
+    "country": "Italy",
+    "val": 4.7,
+    "category": "Restaurant",
+    "icon": "restaurant",
+    "color": "red",
+    "lat": 41.89463789411614,
+    "lng": 12.472666908597398,
+    "video_url": "https://www.instagram.com/p/DHDmI4sNTae/",
+    "images_url": [
+      "https://images.unsplash.com/photo-1705329180706-e25e66b3fb04?q=80&w=748&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ]
+  },
+  {
+    "id": 15,
+    "name": "La Gattabuia",
+    "address": "Via del Porto, 1",
+    "city": "Rome",
+    "country": "Italy",
+    "val": 4.4,
+    "category": "Restaurant",
+    "icon": "restaurant",
+    "color": "red",
+    "lat": 41.88652303474426,
+    "lng": 12.477040935582055,
+    "video_url": "https://www.instagram.com/p/DQ7IBRpDXdr/",
+    "images_url": [
+      "https://images.unsplash.com/photo-1604741836988-152c0fe62e06?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ]
+  },
+  {
+    "id": 16,
+    "name": "Villa Borghese",
+    "address": "Villa Borghese",
+    "city": "Rome",
+    "country": "Italy",
+    "val": 4.6,
+    "category": "Park",
+    "icon": "park",
+    "color": "green",
+    "lat": 41.91405381593465,
+    "lng": 12.48534961058219,
+    "images_url": [
+      "https://images.unsplash.com/photo-1718845643799-9a44658c7a90?q=80&w=627&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1695591627149-666feff28d59?q=80&w=1026&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1561362436-df7d30a3fe2a?q=80&w=765&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ]
+  },
+  {
+    "id": 17,
+    "name": "Piazza Navona",
+    "address": "Piazza Navona",
+    "city": "Rome",
+    "country": "Italy",
+    "val": 4.7,
+    "category": "Landmark",
+    "icon": "camera",
+    "color": "orange",
+    "lat": 41.89931499938318,
+    "lng": 12.473009824075056,
+    "images_url": [
+      "https://images.unsplash.com/photo-1662398885856-cf2ab6e981b2?q=80&w=1174&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1569437718668-8fa8cd755288?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1693824112057-4004bf54d328?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ]
+  },
+  {
+    "id": 18,
+    "name": "Piazza di Spagna",
+    "address": "Piazza di Spagna",
+    "city": "Rome",
+    "country": "Italy",
+    "val": 4.7,
+    "category": "Landmark",
+    "icon": "camera",
+    "color": "orange",
+    "lat": 41.9058734384458,
+    "lng": 12.48242355660823,
+    "images_url": [
+      "https://images.unsplash.com/photo-1636804907035-8ae6360f1d4f?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1693824113484-314403d64923?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ]
+  },
+  {
+    "id": 19,
+    "name": "Empire State Building",
+    "address": "20 W 34th St",
+    "city": "New York",
+    "country": "USA",
+    "val": 4.7,
+    "category": "Landmark",
+    "icon": "camera",
+    "color": "orange",
+    "lat": 40.74858670112698,
+    "lng": -73.98568587627966,
+    "images_url": [
+      "https://images.unsplash.com/photo-1428366890462-dd4baecf492b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://plus.unsplash.com/premium_photo-1694475315783-512c95173330?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1544608644-bd252c997991?q=80&w=685&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ]
+  },
+  {
+    "id": 20,
+    "name": "Flatiron Building",
+    "address": "175 5th Ave",
+    "city": "New York",
+    "country": "USA",
+    "val": 4.5,
+    "category": "Landmark",
+    "icon": "camera",
+    "color": "orange",
+    "lat": 40.741352738386134,
+    "lng": -73.98980654884133,
+    "images_url": [
+      "https://images.unsplash.com/photo-1553542792-9abd1f80a8c5?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1518036400767-73a02d2d2a73?q=80&w=1025&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1496780861691-26d8406e01c6?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ]
+  }
+]
