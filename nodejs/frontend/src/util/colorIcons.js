@@ -31,7 +31,6 @@ const iconMap = {
 const colorMap = { 
     "red": "#f36a73",
     "orange": "#f0a46f",
-    "yellow": "#fff12e",
     "green": "#64b350",
     "cyan": "#83a9eb",
     "dark": "#66555F",
