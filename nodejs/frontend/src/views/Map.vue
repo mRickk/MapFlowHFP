@@ -426,7 +426,7 @@ onMounted(() => {
     });
 
     mapInstance.on('locationerror', (e) => {
-        console.warn("Posizione non trovata:", e.message);
+        console.warn("Position not found:", e.message);
     });
 
     mapInstance.on('contextmenu', (e) => {
@@ -451,11 +451,17 @@ onMounted(() => {
 
 <template>
      <div class="absolute top-0 left-0 w-full z-10 p-8">
-        <SearchBar 
-            v-model="searchQuery"
-            class="" 
-            @poi-selected="handlePoiSelected"
-        />
+        <div class="w-full max-w-md">
+            <div v-if="activeMap" class="bg-white border-x border-t border-lesslight rounded-t-lg p-3 text-center">
+                <h1 class="text-2xl font-bold text-dark">{{ activeMap.name }}</h1>
+            </div>
+            <SearchBar 
+                v-model="searchQuery"
+                :rounded-top="!activeMap"
+                class="" 
+                @poi-selected="handlePoiSelected"
+            />
+        </div>
         <div v-if="routeReminder" 
              :class="['mt-4 p-4 rounded-lg shadow-lg text-white font-medium transition-all duration-300 flex justify-between items-center', 
                       routeReminder.type === 'error' ? 'bg-red-600' : 'bg-yellow-600']">
@@ -499,7 +505,7 @@ onMounted(() => {
 
     <ConfirmationModal
         v-if="showConfirmRemove"
-        title="Rimuovi Punto di Interesse"
+        title="Remove Point of Interest"
         @confirm="confirmRemovePoi"
         @cancel="showConfirmRemove = false"
     >

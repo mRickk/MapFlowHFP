@@ -6,8 +6,10 @@ import { getIconClass, getColorValue } from '@/util/colorIcons.js';
 const props = withDefaults(defineProps<{
   modelValue: string;
   showSuggestions?: boolean;
+  roundedTop?: boolean;
 }>(), {
-  showSuggestions: true
+  showSuggestions: true,
+  roundedTop: true
 });
 
 const emit = defineEmits(['update:modelValue', 'poi-selected']);
@@ -47,7 +49,8 @@ const filteredPois = computed(() => {
   if (!query) return allPois.value;
   
   return allPois.value.filter(poi => 
-    poi.name && poi.name.toLowerCase().includes(query)
+    (poi.name && poi.name.toLowerCase().includes(query)) ||
+    (poi.city && poi.city.toLowerCase().includes(query))
   );
 });
 
@@ -69,7 +72,7 @@ const selectPoi = (poi: any) => {
       @focus="handleFocus"
       type="text"
       placeholder="Search..."
-      class="w-full bg-white border border-lesslight rounded-lg pl-10 pr-4 py-2 text-dark font-mono text-sm focus:outline-none focus:border-bright focus:ring-1 focus:ring-bright transition-all placeholder:text-gray/50"
+      :class="['w-full bg-white border border-lesslight pl-10 pr-4 py-2 text-dark font-mono text-sm focus:outline-none focus:border-bright focus:ring-1 focus:ring-bright transition-all placeholder:text-gray/50', roundedTop ? 'rounded-lg' : 'rounded-b-lg rounded-t-none border-t-0']"
     />
     
     <div 

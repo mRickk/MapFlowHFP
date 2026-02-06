@@ -194,7 +194,7 @@ const initMap = () => {
     });
 
     mapInstance.on('locationerror', (e) => {
-        console.warn("Posizione non trovata:", e.message);
+        console.warn("Position not found:", e.message);
     });
     
     setTimeout(() => {
@@ -256,7 +256,7 @@ onMounted(() => {
 
     <ConfirmationModal
         v-if="showConfirmRemove"
-        title="Rimuovi Punto di Interesse"
+        title="Remove Point of Interest"
         class="z-[9999]"
         @confirm="confirmRemovePoi"
         @cancel="showConfirmRemove = false"
