@@ -192,9 +192,10 @@ const checkRouteStatus = () => {
     let potentialReminder = null;
 
     if (arrivalTime > nextTime) {
+        const delayMinutes = Math.ceil((arrivalTime - nextTime) / (1000 * 60));
         potentialReminder = {
             type: 'error',
-            message: `You are late for ${nextPoiRef.value.name}.${nextPoiRef.value.must_have ? "" : " We recommend skipping it."}`,
+            message: `You are late for ${nextPoiRef.value.name} by ${delayMinutes} minute${delayMinutes === 1 ? '' : 's'}.${nextPoiRef.value.must_have ? "" : " We recommend skipping it."}`,
             key: `${nextPoiRef.value.id}_late`
         };
     } else if ((nextTime - arrivalTime) < 10 * 60 * 1000) {
