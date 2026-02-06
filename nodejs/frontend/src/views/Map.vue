@@ -51,6 +51,8 @@ const isPoiSaved = computed(() => {
 });
 
 const legendKey = ref(0);
+const hiddenLayers = ref(new Set());
+const hiddenDates = ref(new Set());
 
 const loadMapData = () => {
     const user = getUser();
@@ -61,11 +63,35 @@ const loadMapData = () => {
     }
 };
 
+const handleLayerToggled = ({ layerName, isVisible }) => {
+    if (isVisible) {
+        hiddenLayers.value.delete(layerName);
+    } else {
+        hiddenLayers.value.add(layerName);
+    }
+    renderMarkers();
+};
+
+const handleDateToggled = ({ date, isVisible }) => {
+    if (isVisible) {
+        hiddenDates.value.delete(date);
+    } else {
+        hiddenDates.value.add(date);
+    }
+    renderMarkers();
+};
+
 const renderMarkers = () => {
     markerLayerGroup.clearLayers();
     if (!activeMap.value || !activeMap.value.saved_poi) return;
 
     activeMap.value.saved_poi.forEach(poi => {
+        const layerName = poi.layer || 'Uncategorized';
+        if (hiddenLayers.value.has(layerName)) return;
+
+        const dateKey = poi.datetime ? poi.datetime.split('T')[0] : 'No time selected';
+        if (hiddenDates.value.has(dateKey)) return;
+
         const icon = htmlMarkerIcon(poi.icon || "pin", poi.color || "blue", poi.must_have, true, 30, poi.name);
         const marker = L.marker([poi.lat, poi.lng], { icon });
         
@@ -479,10 +505,14 @@ onMounted(() => {
         v-if="activeMapMapId"
         :key="legendKey"
         ref="selectedLegendRef"
-        :mapId="activeMapMapId" 
+        :mapId="activeMapMapId"
+        :initialHiddenLayers="hiddenLayers"
+        :initialHiddenDates="hiddenDates"
         class="z-10"
         @mapUpdated="handleMapUpdated"
         @center-poi="handleCenterPoi"
+        @layer-toggled="handleLayerToggled"
+        @date-toggled="handleDateToggled"
     />
     
     <button 
