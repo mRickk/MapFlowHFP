@@ -113,7 +113,6 @@ const handleSave = () => {
   closeModal();
 };
 
-//Avoid background scroll when modal is open
 watch(isModalOpen, (isOpen) => {
   if (isOpen) {
     document.body.style.overflow = 'hidden';

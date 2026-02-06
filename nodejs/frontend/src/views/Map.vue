@@ -51,6 +51,8 @@ const isPoiSaved = computed(() => {
 });
 
 const legendKey = ref(0);
+const hiddenLayers = ref(new Set());
+const hiddenDates = ref(new Set());
 
 const loadMapData = () => {
     const user = getUser();
@@ -61,11 +63,35 @@ const loadMapData = () => {
     }
 };
 
+const handleLayerToggled = ({ layerName, isVisible }) => {
+    if (isVisible) {
+        hiddenLayers.value.delete(layerName);
+    } else {
+        hiddenLayers.value.add(layerName);
+    }
+    renderMarkers();
+};
+
+const handleDateToggled = ({ date, isVisible }) => {
+    if (isVisible) {
+        hiddenDates.value.delete(date);
+    } else {
+        hiddenDates.value.add(date);
+    }
+    renderMarkers();
+};
+
 const renderMarkers = () => {
     markerLayerGroup.clearLayers();
     if (!activeMap.value || !activeMap.value.saved_poi) return;
 
     activeMap.value.saved_poi.forEach(poi => {
+        const layerName = poi.layer || 'Uncategorized';
+        if (hiddenLayers.value.has(layerName)) return;
+
+        const dateKey = poi.datetime ? poi.datetime.split('T')[0] : 'No time selected';
+        if (hiddenDates.value.has(dateKey)) return;
+
         const icon = htmlMarkerIcon(poi.icon || "pin", poi.color || "blue", poi.must_have, true, 30, poi.name);
         const marker = L.marker([poi.lat, poi.lng], { icon });
         
@@ -426,7 +452,7 @@ onMounted(() => {
     });
 
     mapInstance.on('locationerror', (e) => {
-        console.warn("Posizione non trovata:", e.message);
+        console.warn("Position not found:", e.message);
     });
 
     mapInstance.on('contextmenu', (e) => {
@@ -451,11 +477,17 @@ onMounted(() => {
 
 <template>
      <div class="absolute top-0 left-0 w-full z-10 p-8">
-        <SearchBar 
-            v-model="searchQuery"
-            class="" 
-            @poi-selected="handlePoiSelected"
-        />
+        <div class="w-full max-w-md">
+            <div v-if="activeMap" class="bg-white border-x border-t border-lesslight rounded-t-lg p-3 text-center">
+                <h1 class="text-2xl font-bold text-dark">{{ activeMap.name }}</h1>
+            </div>
+            <SearchBar 
+                v-model="searchQuery"
+                :rounded-top="!activeMap"
+                class="" 
+                @poi-selected="handlePoiSelected"
+            />
+        </div>
         <div v-if="routeReminder" 
              :class="['mt-4 p-4 rounded-lg shadow-lg text-white font-medium transition-all duration-300 flex justify-between items-center', 
                       routeReminder.type === 'error' ? 'bg-red-600' : 'bg-yellow-600']">
@@ -473,10 +505,14 @@ onMounted(() => {
         v-if="activeMapMapId"
         :key="legendKey"
         ref="selectedLegendRef"
-        :mapId="activeMapMapId" 
+        :mapId="activeMapMapId"
+        :initialHiddenLayers="hiddenLayers"
+        :initialHiddenDates="hiddenDates"
         class="z-10"
         @mapUpdated="handleMapUpdated"
         @center-poi="handleCenterPoi"
+        @layer-toggled="handleLayerToggled"
+        @date-toggled="handleDateToggled"
     />
     
     <button 
@@ -499,7 +535,7 @@ onMounted(() => {
 
     <ConfirmationModal
         v-if="showConfirmRemove"
-        title="Rimuovi Punto di Interesse"
+        title="Remove Point of Interest"
         @confirm="confirmRemovePoi"
         @cancel="showConfirmRemove = false"
     >

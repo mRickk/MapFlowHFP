@@ -14,6 +14,14 @@ const props = defineProps({
   mapId: {
     type: [String, Number],
     required: true
+  },
+  initialHiddenLayers: {
+    type: Set,
+    default: () => new Set()
+  },
+  initialHiddenDates: {
+    type: Set,
+    default: () => new Set()
   }
 });
 
@@ -46,7 +54,7 @@ const touchDragState = ref({
 let touchStartX = 0;
 let touchStartY = 0;
 
-const emit = defineEmits(['mapUpdated', 'center-poi']);
+const emit = defineEmits(['mapUpdated', 'center-poi', 'layer-toggled', 'date-toggled']);
 
 const fetchMapData = async (id) => {
   return await getMap(id);
@@ -79,6 +87,18 @@ onMounted(async () => {
         initialLayers.add(poi.layer || 'Uncategorized');
       }
       layers.value = Array.from(initialLayers).sort();
+    }
+
+    if (props.initialHiddenLayers) {
+      props.initialHiddenLayers.forEach(layer => {
+        collapsedGroups.value[layer] = true;
+      });
+    }
+
+    if (props.initialHiddenDates) {
+      props.initialHiddenDates.forEach(date => {
+        collapsedGroups.value[date] = true;
+      });
     }
   }
 });
@@ -142,11 +162,19 @@ const groupedByDate = computed(() => {
 });
 
 const toggleSidebar = () => isOpen.value = !isOpen.value;
-const toggleGroup = (key) => {
+const toggleGroup = (key, type = null) => {
   collapsedGroups.value = {
     ...collapsedGroups.value,
     [key]: !collapsedGroups.value[key]
   };
+
+  const isVisible = !collapsedGroups.value[key];
+
+  if (type === 'layer') {
+    emit('layer-toggled', { layerName: key, isVisible });
+  } else if (type === 'date') {
+    emit('date-toggled', { date: key, isVisible });
+  }
 };
 
 const selectLayer = (name) => {
@@ -458,7 +486,7 @@ const movePoi = (poiId, toLayer) => {
                 type="checkbox" 
                 class="form-checkbox h-4 w-4"
                 :checked="!collapsedGroups[layerName]"
-                @change="toggleGroup(layerName)"
+                @change="toggleGroup(layerName, 'layer')"
                 @click.stop
               >
               <h3 class="text-sm font-bold text-gray-700 uppercase tracking-wider">{{ layerName }}</h3>
@@ -527,7 +555,7 @@ const movePoi = (poiId, toLayer) => {
                 type="checkbox" 
                 class="form-checkbox h-4 w-4"
                 :checked="!collapsedGroups[date]"
-                @change="toggleGroup(date)"
+                @change="toggleGroup(date, 'date')"
               >
               <h3 class="text-sm font-bold text-dark">{{ formatDate(date) }}</h3>
             </div>
