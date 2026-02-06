@@ -6,10 +6,13 @@ import SearchBar from '@/components/SearchBar.vue';
 import ConfirmationModal from '@/components/ConfirmationModal.vue';
 import { temporaryMarkerIcon, htmlMarkerIcon, minZoomForLabels, userIcon } from '@/util/mapWaypoint';
 import { onMounted, onUnmounted, ref, watch, computed } from 'vue';
-import L from 'leaflet';
-import 'leaflet-routing-machine';
 import { getUser, createPoiInMap, removePoiFromMap } from '@/services/userService';
 import { getPOIs } from '@/services/poiService';
+
+import L from 'leaflet';
+window.L = L;
+import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
+import 'leaflet-routing-machine';
 
 let mapInstance = null;
 const activeMapMapId = ref(null);
@@ -304,15 +307,66 @@ onMounted(() => {
     markerLayerGroup.addTo(mapInstance);
     tempMarkerLayer.addTo(mapInstance);
 
+    if (!L.Routing.OpenRouteService){
+      L.Routing.OpenRouteService = L.Class.extend({
+        initialize: function(apiKey, options) {
+          this._apiKey = apiKey;
+          this._options = options || {};
+        },
+        route: function(waypoints, callback, context, options) {
+          const wps = waypoints.map(wp => [wp.latLng.lng, wp.latLng.lat]);
+          const profile = this._options.profile || 'driving-car';
+          const url = `https://api.openrouteservice.org/v2/directions/${profile}/geojson`;
+
+          fetch(url, {
+            method: 'POST',
+            headers: {
+              'Authorization': this._apiKey,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ coordinates: wps })
+          })
+              .then(response => response.json())
+              .then(data => {
+                if (!data.features || data.features.length === 0) {
+                  callback.call(context, { status: 400, message: "No route found" }, null);
+                  return;
+                }
+                const route = data.features[0];
+                const coordinates = route.geometry.coordinates.map(c => L.latLng(c[1], c[0]));
+                const summary = route.properties.summary;
+
+                const result = {
+                  name: 'OpenRouteService',
+                  coordinates: coordinates,
+                  instructions: [],
+                  summary: {
+                    totalDistance: summary.distance,
+                    totalTime: summary.duration
+                  },
+                  inputWaypoints: waypoints
+                };
+                callback.call(context, null, [result]);
+              })
+              .catch(err => {
+                callback.call(context, err, null);
+              });
+        }
+      });
+
+      L.Routing.openrouteservice = function(apiKey, options) {
+        return new L.Routing.OpenRouteService(apiKey, options);
+      };
+    }
+
     routingControl = L.Routing.control({
       waypoints: [], 
       hints: {
         locations: []
       },
-      router: L.Routing.osrmv1({
-        serviceUrl: 'https://router.project-osrm.org/route/v1',
-        profile: 'foot',
-        timeout: 300000,
+      router: L.Routing.openrouteservice('eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjU3ZjIwNzE1ZjliNDQzZDM5YjJlYjIxMTFmNmQxOGRjIiwiaCI6Im11cm11cjY0In0=', {
+        profile: 'foot-walking',
+        timeout: 300000
       }),
       show: false,
       addWaypoints: false,
