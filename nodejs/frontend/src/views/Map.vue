@@ -388,9 +388,6 @@ onMounted(() => {
 
       lastRouteDuration.value = summary.totalTime;
       checkRouteStatus();
-
-      console.log('Tempo stimato: ' + timeInMinutes + ' minuti');
-      console.log('Distanza: ' + distanceInKm + ' km');
     });
 
     updateRoute();
