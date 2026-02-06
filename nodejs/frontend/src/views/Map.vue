@@ -388,9 +388,6 @@ onMounted(() => {
 
       lastRouteDuration.value = summary.totalTime;
       checkRouteStatus();
-
-      console.log('Tempo stimato: ' + timeInMinutes + ' minuti');
-      console.log('Distanza: ' + distanceInKm + ' km');
     });
 
     updateRoute();
@@ -522,13 +519,6 @@ onMounted(() => {
 </template>
 
 <style>
-html, body, #app {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-}
-
 .leaflet-control-container {
     z-index: 10; 
 }

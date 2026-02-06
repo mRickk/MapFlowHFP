@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { selectMap } from '@/services/userService.js';
+import { formatDate } from '@/util/dateTime.js';
 
 interface Props {
   id: number;
@@ -18,17 +19,8 @@ const router = useRouter();
 
 const isMenuOpen = ref(false);
 
-const formatDate = (dateStr: string) => {
-  if (!dateStr) return '';
-  return new Date(dateStr).toLocaleDateString('it-IT', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric'
-  });
-};
-
 const dateRange = computed(() => {
-  return `${formatDate(props.startDate)} - ${formatDate(props.endDate)}`;
+  return `${formatDate(props.startDate)} ${formatDate(props.endDate)}`;
 });
 
 const durationInDays = computed(() => {
@@ -74,7 +66,7 @@ const onDelete = () => {
       class="group relative w-[357px] h-[145px] rounded-[15px] bg-white border border-lesslight font-mono p-3 flex flex-col justify-between overflow-hidden shadow-sm 
              hover:shadow-xl hover:-translate-y-1 hover:border-bright/30 transition-all duration-300 ease-out cursor-pointer"
   >
-    <div class="flex justify-between items-start w-full mb-1 relative"> <h3 class="text-dark font-bold text-sm truncate pr-2 group-hover:text-bright transition-colors">
+    <div class="flex justify-between items-start w-full mb-1 relative"> <h3 class="text-dark font-bold text-xl truncate pr-2 group-hover:text-bright transition-colors">
         {{ name }}
       </h3>
       
@@ -82,27 +74,28 @@ const onDelete = () => {
         @click.stop="toggleMenu" 
         class="text-gray hover:text-dark transition-colors relative z-5 p-1 rounded-full hover:bg-lighter"
       >
-        <i class="bi bi-three-dots-vertical"></i>
+        <i class="bi bi-three-dots-vertical text-lg"></i>
       </button>
 
       <div 
         v-if="isMenuOpen" 
         @click.stop
-        class="absolute top-6 right-0 bg-white border border-lesslight shadow-lg rounded-md z-20 w-32 flex flex-col py-1 animate-fade-in-down"
+        class="absolute top-6 right-0 bg-white border border-lesslight shadow-lg rounded-md z-20 w-40 flex flex-col py-1 animate-fade-in-down"
       >
         <button 
           @click="onEdit" 
-          class="text-left px-4 py-2 text-xs text-dark hover:bg-lighter hover:text-bright transition-colors flex items-center gap-2"
+          class="text-left px-4 py-3 text-sm text-dark hover:bg-lighter hover:text-bright transition-colors flex items-center gap-2"
         >
           <i class="bi bi-pencil"></i> Edit
         </button>
         <button 
           @click="onDelete" 
-          class="text-left px-4 py-2 text-xs text-red-500 hover:bg-red-50 transition-colors flex items-center gap-2"
+          class="text-left px-4 py-3 text-sm text-red-500 hover:bg-lighter hover:text-red-600 transition-colors flex items-center gap-2"
         >
           <i class="bi bi-trash"></i> Delete
         </button>
       </div>
+
 
       <div v-if="isMenuOpen" @click.stop="isMenuOpen = false" class="fixed inset-0 z-10 cursor-default"></div>
     </div>
@@ -117,18 +110,18 @@ const onDelete = () => {
       </div>
 
       <div class="flex flex-col justify-between w-full pl-3 h-[85px]">
-        <div class="text-xs text-gray leading-tight">
+        <div class="text-md text-lessdark leading-tight">
           {{ dateRange }}
         </div>
 
         <div class="flex justify-between items-end w-full">
-          <span class="text-bright font-bold text-lg leading-none transform group-hover:translate-x-1 transition-transform">
+          <span class="text-bright font-bold text-xl leading-none transform group-hover:translate-x-1 transition-transform">
             {{ durationLabel }}
           </span>
 
-          <div class="text-bright font-bold text-lg leading-none flex items-center gap-1">
+          <div class="text-bright font-bold text-xl leading-none flex items-center gap-1">
             <span>{{ poiCount }}</span>
-            <i class="bi bi-geo-alt-fill text-sm animate-pulse"></i>
+            <i class="bi bi-geo-alt-fill text-base animate-pulse"></i>
           </div>
         </div>
       </div>

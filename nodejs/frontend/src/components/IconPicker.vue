@@ -7,7 +7,7 @@
         :key="icon"
         type="button"
         class="p-2 rounded border border-gray-200 hover:bg-gray-100 flex items-center justify-center transition-colors aspect-square"
-        :class="{ 'bg-lesslight border-bright text-dark': modelValue === icon, 'text-gray-500': modelValue !== icon }"
+        :class="{ 'bg-lesslight border-brighter text-dark': modelValue === icon, 'text-gray-500': modelValue !== icon }"
         @click="$emit('update:modelValue', icon)"
         :title="icon"
       >

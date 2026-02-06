@@ -81,7 +81,7 @@ export const htmlMarkerIcon = (icon = "pin", color = '#555555', isMustHave = fal
     });
 };
 
-export const bubbleIcon = (name = null, selected = false) => {
+export const bubbleIcon = (name = null, selected = false, index = 0) => {
     const pixelSize = 48;
     const textColor = '#333333';
     let bubbleColor = "bg-bright";
@@ -111,19 +111,35 @@ export const bubbleIcon = (name = null, selected = false) => {
         </div>
     ` : '';
 
+    const animStyle = !selected 
+        ? `animation: pop-in 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) backwards; animation-delay: ${(index * 0.1).toFixed(2)}s;`
+        : '';
+        
+    const floatStyle = !selected
+        ? `animation-delay: ${-(Math.random() * 2).toFixed(2)}s;`
+        : '';
+        
+    const content = `
+        <div class="relative flex items-center justify-center ${bubbleColor} shadow-lg" 
+                style="width: ${pixelSize}px; height: ${pixelSize}px; 
+                    border-radius: 50% 50% 50% 0; 
+                    transform: rotate(-45deg);">
+            
+            <i class="bi bi-file-play-fill ${iconColor} flex items-center justify-center" 
+                style="transform: rotate(45deg); font-size: ${pixelSize / 2}px;">
+            </i>
+        </div>
+        ${labelHtml}
+    `;
+
     return L.divIcon({
-        html: `
-            <div class="relative flex items-center justify-center ${bubbleColor} shadow-lg" 
-                 style="width: ${pixelSize}px; height: ${pixelSize}px; 
-                        border-radius: 50% 50% 50% 0; 
-                        transform: rotate(-45deg);">
-                
-                <i class="bi bi-file-play-fill ${iconColor} flex items-center justify-center" 
-                   style="transform: rotate(45deg); font-size: ${pixelSize / 2}px;">
-                </i>
+        html: !selected ? `
+            <div style="${animStyle}">
+                <div class="animate-float" style="${floatStyle}">
+                    ${content}
+                </div>
             </div>
-            ${labelHtml}
-            `,
+        ` : content,
         className: '',
         iconSize: [pixelSize, pixelSize],
         iconAnchor: [0, pixelSize], 

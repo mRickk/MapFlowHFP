@@ -126,11 +126,11 @@ const updateMarkers = () => {
     const savedPois = activeMap.value?.saved_poi.filter(poi => !poi.video_url) || [];
     const videoPois = getPOIs().filter(poi => poi.video_url);
 
-    videoPois.forEach(p => {
+    videoPois.forEach((p, index) => {
         const selected = activeMap.value?.saved_poi.some(saved => saved.id === p.id);
         
         const marker = L.marker([p.lat, p.lng], { 
-            icon: bubbleIcon(p.name, selected)
+            icon: bubbleIcon(p.name, selected, index)
         });
         
         marker.on('click', () => openVideoModal(p));
@@ -160,17 +160,6 @@ const initMap = () => {
     }).addTo(mapInstance);
 
     mapInstance.fitBounds(bounds, { padding: [50, 50] });
-
-    videoPois.forEach(p => {
-        const selected = activeMap.value?.saved_poi.some(saved => saved.id === p.id);
-        const marker = L.marker([p.lat, p.lng], { icon: bubbleIcon(p.name, selected) }).addTo(mapInstance);
-        marker.on('click', () => openVideoModal(p));
-    });
-
-    savedPois.forEach(poi => {
-        const icon = htmlMarkerIcon(poi.icon || "pin", poi.color || "blue", poi.must_have, true, 30, poi.name);
-        L.marker([poi.lat, poi.lng], { icon }).addTo(mapInstance);
-    });
 
     const updateLabelsVisibility = () => {
         const mapEl = document.getElementById('map');

@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import { formatTime, getCurrentLocalISO } from '@/util/dateTime.js';
+import { formatTime, formatDate, getCurrentLocalISO } from '@/util/dateTime.js';
 import { getIconClass, getColorValue } from '@/util/colorIcons';
 import { updatePoiInMap, removePoiFromMap } from '@/services/userService';
 import { getMap } from '@/services/userService';
@@ -512,7 +512,7 @@ const movePoi = (poiId, toLayer) => {
             @click="addLayer"
             class="w-full py-2 border-2 border-dashed border-green text-green rounded-lg hover:bg-white transition-colors flex items-center justify-center gap-2 mt-4"
           >
-            <i class="bi bi-plus-circle-fill"></i> <span class="font-semibold">Add a new layer</span>
+            <i class="bi bi-plus-circle-fill"></i> <span class="font-medium">Add a new layer</span>
           </button>
         </div>
 
@@ -529,7 +529,7 @@ const movePoi = (poiId, toLayer) => {
                 :checked="!collapsedGroups[date]"
                 @change="toggleGroup(date)"
               >
-              <h3 class="text-sm font-bold text-dark">{{ date }}</h3>
+              <h3 class="text-sm font-bold text-dark">{{ formatDate(date) }}</h3>
             </div>
 
             <div :class="{ 'opacity-50 grayscale': collapsedGroups[date] }">
