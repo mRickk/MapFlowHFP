@@ -2,6 +2,7 @@
 import MapCard from '@/components/MapCard.vue';
 import { computed, onMounted, onUnmounted, watch, ref, reactive } from 'vue';
 import SearchBar from '@/components/SearchBar.vue';
+import ConfirmationModal from '@/components/ConfirmationModal.vue';
 import { getUser, addMap, deleteMap, updateMap } from '@/services/userService.js'
 
 interface MapData {
@@ -15,6 +16,8 @@ interface MapData {
 
 let maps = ref<MapData[] | null>(null);
 const isModalOpen = ref(false);
+const showDeleteConfirm = ref(false);
+const mapToDeleteId = ref<number | null>(null);
 
 const isEditing = ref(false);
 const editingId = ref<number | null>(null);
@@ -62,10 +65,17 @@ const handleEditMap = (id: number) => {
 };
 
 const handleDeleteMap = (id: number) => {
-  if(confirm("Are you sure you want to delete this map?")) {
-    deleteMap(id);
+  mapToDeleteId.value = id;
+  showDeleteConfirm.value = true;
+};
+
+const confirmDeleteMap = () => {
+  if (mapToDeleteId.value) {
+    deleteMap(mapToDeleteId.value);
     maps.value = getUser().maps;
   }
+  showDeleteConfirm.value = false;
+  mapToDeleteId.value = null;
 };
 
 const closeModal = () => {
@@ -126,6 +136,7 @@ onUnmounted(() => {
 
       <SearchBar 
           v-model="searchQuery"
+          :show-suggestions="false"
         />
     </header>
 
@@ -145,12 +156,21 @@ onUnmounted(() => {
 
       <button 
         @click="openModal"
-        class="w-[357px] h-[140px] rounded-[15px] border-2 border-dashed border-lesslight hover:border-bright flex flex-col items-center justify-center text-gray hover:text-bright transition-colors group"
+        class="w-[357px] h-[140px] rounded-[15px] border-2 border-dashed border-green hover:border-bright flex flex-col items-center justify-center text-green hover:text-bright transition-colors group"
       >
         <i class="bi bi-plus-circle-fill text-2xl mb-2 group-hover:scale-110 transition-transform"></i>
         <span class="text-sm font-semibold">Create New Map</span>
       </button>
     </section>
+
+    <ConfirmationModal
+      v-if="showDeleteConfirm"
+      title="Delete Map"
+      @cancel="showDeleteConfirm = false"
+      @confirm="confirmDeleteMap"
+    >
+      <p>Are you sure you want to delete this map? This action cannot be undone.</p>
+    </ConfirmationModal>
 
     <Teleport to="body">
       <div v-if="isModalOpen" class="fixed inset-0 z-50 flex items-center justify-center p-4">

@@ -88,21 +88,22 @@ const onDelete = () => {
       <div 
         v-if="isMenuOpen" 
         @click.stop
-        class="absolute top-6 right-0 bg-white border border-lesslight shadow-lg rounded-md z-20 w-32 flex flex-col py-1 animate-fade-in-down"
+        class="absolute top-6 right-0 bg-white border border-lesslight shadow-lg rounded-md z-20 w-40 flex flex-col py-1 animate-fade-in-down"
       >
         <button 
           @click="onEdit" 
-          class="text-left px-4 py-2 text-xs text-dark hover:bg-lighter hover:text-bright transition-colors flex items-center gap-2"
+          class="text-left px-4 py-3 text-sm text-dark hover:bg-lighter hover:text-bright transition-colors flex items-center gap-2"
         >
           <i class="bi bi-pencil"></i> Edit
         </button>
         <button 
           @click="onDelete" 
-          class="text-left px-4 py-2 text-xs text-red-500 hover:bg-red-50 transition-colors flex items-center gap-2"
+          class="text-left px-4 py-3 text-sm text-red-500 hover:bg-lighter hover:text-red-600 transition-colors flex items-center gap-2"
         >
           <i class="bi bi-trash"></i> Delete
         </button>
       </div>
+
 
       <div v-if="isMenuOpen" @click.stop="isMenuOpen = false" class="fixed inset-0 z-10 cursor-default"></div>
     </div>
