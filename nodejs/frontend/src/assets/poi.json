@@ -376,8 +376,8 @@
     "country": "USA",
     "val": 4.7,
     "category": "monument",
-    "icon": "star",
-    "color": "yellow",
+    "icon": "landmark",
+    "color": "orange",
     "lat": 40.68931535463119,
     "lng": -74.04450075848271,
     "images_url": [
