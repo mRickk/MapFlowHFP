@@ -3,9 +3,12 @@ import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { getPOIs } from '@/services/poiService.js';
 import { getIconClass, getColorValue } from '@/util/colorIcons.js';
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   modelValue: string;
-}>();
+  showSuggestions?: boolean;
+}>(), {
+  showSuggestions: true
+});
 
 const emit = defineEmits(['update:modelValue', 'poi-selected']);
 
@@ -70,7 +73,7 @@ const selectPoi = (poi: any) => {
     />
     
     <div 
-      v-if="isOpen && filteredPois.length > 0" 
+      v-if="showSuggestions && isOpen && filteredPois.length > 0" 
       class="absolute top-full left-0 w-full mt-2 bg-white border border-lesslight rounded-lg shadow-xl max-h-64 overflow-y-auto z-50 py-1"
     >
       <ul>

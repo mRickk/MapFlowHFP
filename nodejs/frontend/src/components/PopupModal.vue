@@ -5,8 +5,8 @@
       @click="$emit('close')"
     ></div>
     
-    <div class="relative z-10 w-11/12 max-w-lg p-6 bg-white text-black rounded shadow-lg">
-      <div class="flex items-center justify-between mb-4">
+    <div class="relative z-10 w-11/12 max-w-lg max-h-[85vh] flex flex-col p-6 bg-white text-black rounded shadow-lg">
+      <div class="flex items-center justify-between mb-4 shrink-0">
         <h2 class="text-xl font-bold">{{ title }}</h2>
         <button 
           @click="$emit('close')" 
@@ -17,7 +17,7 @@
           </svg>
         </button>
       </div>
-      <div>
+      <div class="overflow-y-auto pr-1">
         <slot></slot>
       </div>
     </div>
